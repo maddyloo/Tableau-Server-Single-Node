@@ -4,7 +4,7 @@
 # sh ./config-linux.sh -u <username> -p <password> -h admin -i admin -j 98107 -k usa -l seattle -m data -n tech -o yes -q pm -r 8888888 -s tableau -t wa -v dev -w jamie -x jdata@tableau.com
 # customized to reflect machine admin username and admin password
 
-while getopts u:p:h:i:j:k:l:m:n:o:q:r:s:t:v:w:x: option
+while getopts u:p:h:i:j:k:l:m:n:o:q:r:s:t:v:w:x:y: option
 do
  case "${option}"
  in
@@ -25,6 +25,7 @@ do
  v) DEPARMENT=${OPTARG};;
  w) FIRST_NAME=${OPTARG};;
  x) EMAIL=${OPTARG};;
+ y) LICENSE_KEY=${OPTARG};;
 esac
 done
 
@@ -75,8 +76,15 @@ echo "modified automated-installer" >> installer_log.txt
 # ensure everything is finished
 wait
 
-# run automated installer
-sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
+# run automated installer (install trial if no license key)
+if [ -z "$LICENSE_KEY" ]
+then
+      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
+else
+      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
+fi
+
+# sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
 
 wait
 
