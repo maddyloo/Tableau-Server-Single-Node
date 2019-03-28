@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "locadmin"
+    },
+    "tableau_admin_username": {
+      "value": "tabadmin"
+    },
+    "OS": {
+      "value": "Ubuntu"
+    },
+    "adminPassword": {
+      "value": "P@ssword12345$"
+    },
+    "tableau_admin_password": {
+      "value": "P@ssword12345$"
+    },
+    "registration_first_name": {
+      "value": "first"
+    },
+    "registration_last_name": {
+      "value": "Last"
+    },
+    "registration_email": {
+      "value": "jack@sme.com"
+    },
+    "registration_company": {
+      "value": "Jack in the Box"
+    },
+    "registration_title": {
+      "value": "VP"
+    },
+    "registration_department": {
+      "value": "Operations"
+    },
+    "registration_industry": {
+      "value": "Food"
+    },
+    "registration_phone": {
+      "value": "4259991000"
+    },
+    "registration_city": {
+      "value": "Seattle"
+    },
+    "registration_state": {
+      "value": "Washington"
+    },
+    "registration_zip": {
+      "value": "98109"
+    },
+    "registration_country": {
+      "value": "United States"
+    },
+    "source_CIDR": {
+      "value": "192.195.4.0/24"
+
+    }
+  }
+}
