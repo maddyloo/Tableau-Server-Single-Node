@@ -141,7 +141,7 @@
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
-    "numberofInstances": "1",
+    "numberofInstances": 1,
     "Ubuntu": {
       "publisher": "Canonical",
       "offer": "UbuntuServer",
@@ -265,7 +265,6 @@
       "securityRules": "[variables('LinuxsecurityRules')]"
     }
   },
-
   {
     "type": "Microsoft.Network/publicIPAddresses",
     "name": "[concat('tabpip', copyindex(1))]",
