@@ -8,9 +8,6 @@
     "tableau_admin_username": {
       "value": "tabadmin"
     },
-    "OS": {
-      "value": "Ubuntu"
-    },
     "adminPassword": {
       "value": "P@ssword12345$"
     },
