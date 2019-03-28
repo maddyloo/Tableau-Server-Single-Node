@@ -63,11 +63,11 @@ echo '{
 wait
 
 # download tableau server .deb file
-wget --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2018.2.0/tableau-server-2018-2-0_amd64.deb
+wget --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.1.2/tableau-server-2019-1-2_amd64.deb
 
 # download automated-installer
 wget --remote-encoding=UTF-8 --output-document=automated-installer.sh https://raw.githubusercontent.com/tableau/server-install-script-samples/master/linux/automated-installer/automated-installer
-
+                                                              
 wait
 chmod +x automated-installer.sh
 
