@@ -2,7 +2,13 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminUsername": {
+    "resourceGroupLocation": {
+      "type": "string",
+      "defaultValue": "West US",
+      "metadata": {
+        "description": "Resource group location"
+      }
+    },"adminUsername": {
       "type": "string",
       "metadata": {
         "description": "Admin username for Virtual Machine"
@@ -14,37 +20,11 @@
         "description": "Password for the Virtual Machine."
       }
     },
-    "numberOfInstances": {
-      "type": "int",
-      "defaultValue": 1,
-      "minValue": 1,
-      "maxValue": 1,
-      "metadata": {
-        "description": "Number of Virtual Machines to deploy,"
-      }
-    },
-    "OS": {
-      "type": "string",
-      "defaultValue": "Ubuntu",
-      "allowedValues": [
-        "Ubuntu"
-      ],
-      "metadata": {
-        "description": "OS Platform for the VM"
-      }
-    },
     "publicIpResourceGroupName": {
       "type": "string",
       "defaultValue": "[resourceGroup().name]",
       "metadata": {
         "description": "Name of the resource group for the public ip address"
-      }
-    },
-    "winscripturi": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/maddyloo/Tableau-Server-Single-Node/master/scripts/windows/config-windows.ps1",
-      "metadata": {
-        "description": "Uri for custom script."
       }
     },
     "ubuntuscripturi": {
@@ -57,7 +37,7 @@
     "source_CIDR": {
       "type": "string",
       "metadata": {
-        "description": "CIDR block for SSH/RDP source - limit to your IP for secure access."
+        "description": "CIDR block for SSH source - limit to your IP for secure access."
       }
     },
     "tableau_admin_username": {
@@ -161,25 +141,17 @@
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
+    "numberofInstances": "1",
     "Ubuntu": {
       "publisher": "Canonical",
       "offer": "UbuntuServer",
       "sku": "16.04.0-LTS",
       "version": "latest"
     },
-    "Windows": {
-      "publisher": "MicrosoftWindowsServer",
-      "offer": "WindowsServer",
-      "sku": "2016-Datacenter",
-      "version": "latest"
-    },
     "virtualMachineSize": "Standard_D16s_v3",
-    "imageReference": "[variables(parameters('OS'))]",
+    "imageReference": "[variables('Ubuntu')]",
     "publicIpAddressId": {
       "id": "[resourceId(parameters('publicIpResourceGroupName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-    },
-    "WinConfiguration": {
-      "provisionVmAgent": "true"
     },
     "LinConfiguration": {
       "disablePasswordAuthentication": true,
@@ -195,8 +167,6 @@
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
     "UbuntuExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -w ''', parameters('registration_first_name'), '''')]",
     "UbCmdWrapper": "[concat('sh ./config-linux.sh ', variables('UbuntuExecute'))]",
-    "jsonConfig": "[concat('{\"local_admin_user\": \"', parameters('adminUsername'), '\",\"local_admin_pass\": \"', parameters('adminPassword'), '\",\"ts_admin_un\": \"', parameters('tableau_admin_username'), '\",\"ts_admin_pw\": \"', parameters('tableau_admin_password'), '\",\"reg_first_name\": \"', parameters('registration_first_name'), '\",\"reg_last_name\": \"', parameters('registration_last_name'), '\",\"reg_email\": \"', parameters('registration_email'), '\",\"reg_company\": \"', parameters('registration_company'), '\",\"reg_title\": \"', parameters('registration_title'), '\",\"reg_department\": \"', parameters('registration_department'), '\",\"reg_industry\": \"', parameters('registration_industry'), '\",\"reg_phone\": \"', parameters('registration_phone'), '\",\"reg_city\": \"', parameters('registration_city'), '\",\"reg_zip\": \"', parameters('registration_zip'), '\",\"reg_state\": \"', parameters('registration_state'), '\",\"reg_country\": \"', parameters('registration_country'), '\",\"license_key\": \"', parameters('license_key'), '\",\"install_script_url\": \"https://raw.githubusercontent.com/tableau/server-install-script-samples/master/windows/tsm/SilentInstaller/SilentInstaller.py\"}')]",
-    "WindowsScriptCmd": "[concat('powershell -Executionpolicy unrestricted -File config-windows.ps1 -config ', base64(variables('jsonConfig')))]",
     "LinuxsecurityRules": [
       {
         "name": "ssh-rule",
@@ -205,50 +175,6 @@
           "protocol": "Tcp",
           "sourcePortRange": "*",
           "destinationPortRange": "22",
-          "sourceAddressPrefix": "[parameters('source_CIDR')]",
-          "destinationAddressPrefix": "*",
-          "access": "Allow",
-          "priority": 100,
-          "direction": "Inbound"
-        }
-      },
-      {
-        "name": "mngagent-rule",
-        "properties": {
-          "description": "Allow Management",
-          "protocol": "Tcp",
-          "sourcePortRange": "*",
-          "destinationPortRange": "8850",
-          "sourceAddressPrefix": "[parameters('source_CIDR')]",
-          "destinationAddressPrefix": "*",
-          "access": "Allow",
-          "priority": 101,
-          "direction": "Inbound"
-        }
-      },
-      {
-        "name": "web-rule",
-        "properties": {
-          "description": "Allow WEB",
-          "protocol": "Tcp",
-          "sourcePortRange": "*",
-          "destinationPortRange": "80",
-          "sourceAddressPrefix": "Internet",
-          "destinationAddressPrefix": "*",
-          "access": "Allow",
-          "priority": 102,
-          "direction": "Inbound"
-        }
-      }
-    ],
-    "WindowssecurityRules": [
-      {
-        "name": "rdp-rule",
-        "properties": {
-          "description": "Allow RDP",
-          "protocol": "Tcp",
-          "sourcePortRange": "*",
-          "destinationPortRange": "3389",
           "sourceAddressPrefix": "[parameters('source_CIDR')]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
@@ -304,7 +230,7 @@
     "type": "Microsoft.Network/virtualNetworks",
     "name": "[variables('virtualNetworkName')]",
     "apiVersion": "2016-03-30",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('resourceGroupLocation')]",
     "dependsOn": [
       "[variables('NSGName')]"
     ],
@@ -331,12 +257,12 @@
     "apiVersion": "2015-06-15",
     "type": "Microsoft.Network/networkSecurityGroups",
     "name": "[variables('NSGName')]",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('resourceGroupLocation')]",
     "tags": {
       "displayName": "[variables('NSGName')]"
     },
     "properties": {
-      "securityRules": "[if(equals(parameters('OS'),'Windows'), variables('WindowssecurityRules'), variables('LinuxsecurityRules'))]"
+      "securityRules": "[variables('LinuxsecurityRules')]"
     }
   },
 
@@ -344,10 +270,10 @@
     "type": "Microsoft.Network/publicIPAddresses",
     "name": "[concat('tabpip', copyindex(1))]",
     "apiVersion": "2016-03-30",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('resourceGroupLocation')]",
     "copy": {
       "name": "PipLoop",
-      "count": "[parameters('numberOfInstances')]"
+      "count": "[variables('numberOfInstances')]"
     },
     "dependsOn": [
       "[variables('virtualNetworkName')]"
@@ -363,10 +289,10 @@
     "type": "Microsoft.Network/networkInterfaces",
     "name": "[concat('tabnic', copyIndex(1))]",
     "apiVersion": "2016-03-30",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('resourceGroupLocation')]",
     "copy": {
       "name": "nicLoop",
-      "count": "[parameters('numberOfInstances')]"
+      "count": "[variables('numberOfInstances')]"
     },
     "dependsOn": [
       "[variables('virtualNetworkName')]",
@@ -393,10 +319,10 @@
     "type": "Microsoft.Compute/virtualMachines",
     "name": "[concat('tableau', copyIndex(1))]",
     "apiVersion": "2016-04-30-preview",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('resourceGroupLocation')]",
     "copy": {
       "name": "virtualMachineLoop",
-      "count": "[parameters('numberOfInstances')]"
+      "count": "[variables('numberOfInstances')]"
     },
     "dependsOn": [
       "nicLoop"
@@ -408,9 +334,8 @@
       "osProfile": {
         "computerName": "[concat('tableauvm', copyIndex(1))]",
         "adminUsername": "[parameters('adminUsername')]",
-        "adminPassword": "[parameters('adminPassword')]",
-        "windowsConfiguration": "[if(equals(parameters('OS'),'Windows'), variables('WinConfiguration'), json('null'))]"
-      },
+        "adminPassword": "[parameters('adminPassword')]"
+        },
       "storageProfile": {
         "imageReference": "[variables('imageReference')]",
         "osDisk": {
@@ -439,10 +364,9 @@
     },
     "resources": [
       {
-        "condition": "[equals(parameters('OS'), 'Ubuntu')]",
         "name": "linuxappdeploy",
         "type": "extensions",
-        "location": "[resourceGroup().location]",
+        "location": "[parameters('resourceGroupLocation')]",
         "apiVersion": "2016-03-30",
         "dependsOn": [
           "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
@@ -465,31 +389,6 @@
             "fileUris": [
               "[parameters('ubuntuscripturi')]"
             ]
-          }
-        }
-      },
-      {
-        "condition": "[equals(parameters('OS'), 'Windows')]",
-        "name": "windowsappdeploy",
-        "type": "extensions",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "2016-03-30",
-        "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
-        ],
-        "tags": {
-          "displayName": "windowsappdeploy"
-        },
-        "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "fileUris": [
-              "[parameters('winscripturi')]"
-            ],
-            "commandToExecute": "[variables('WindowsScriptCmd')]"
           }
         }
       }
