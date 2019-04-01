@@ -9,7 +9,7 @@
 
 This template deploys a **single node Tableau Server instance on a Standard_D16_v3 VM instance running Ubuntu 16.04.0-LTS** in its own Virtual Network.
 
-`Tags: Tableau, Tableau Server, Windows Server, Analytics, Self-Service, Data Visualization, Windows`
+`Tags: Tableau, Tableau Server, Business Intelligence, Analytics, Self-Service, Data Visualization`
 
 ## Tableau Server and deployed resources overview
 

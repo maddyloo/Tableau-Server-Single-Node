@@ -4,7 +4,6 @@
   "parameters": {
     "resourceGroupLocation": {
       "type": "string",
-      "defaultValue": "West US",
       "metadata": {
         "description": "Resource group location"
       }
