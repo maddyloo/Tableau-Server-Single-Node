@@ -26,13 +26,6 @@
         "description": "Name of the resource group for the public ip address"
       }
     },
-    "ubuntuscripturi": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/maddyloo/Tableau-Server-Single-Node/master/scripts/config-linux.sh",
-      "metadata": {
-        "description": "Uri for custom script."
-      }
-    },
     "source_CIDR": {
       "type": "string",
       "metadata": {
@@ -147,6 +140,7 @@
       "sku": "16.04.0-LTS",
       "version": "latest"
     },
+    "ubuntuscripturi": "https://raw.githubusercontent.com/maddyloo/Tableau-Server-Single-Node/master/scripts/config-linux.sh",
     "virtualMachineSize": "Standard_D16s_v3",
     "imageReference": "[variables('Ubuntu')]",
     "publicIpAddressId": {
@@ -384,7 +378,7 @@
           "protectedSettings": {
             "commandToExecute": "[variables('UbCmdWrapper')]",
             "fileUris": [
-              "[parameters('ubuntuscripturi')]"
+              "[variables('ubuntuscripturi')]"
             ]
           }
         }
