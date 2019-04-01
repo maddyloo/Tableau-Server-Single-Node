@@ -87,9 +87,9 @@ If you would like to learn more about the steps required for a manual deplyoment
 
 #### Connecting
 
-Once the deployment is completed you can access Tableau Server by navigating to 'http://<IP Address or DNS>'.  You can use the tableau admin credentials you specified in your parameters to log in as an admin user.
+Once the deployment is completed you can access Tableau Server by navigating to 'http://[IP Address or DNS]'.  You can use the tableau admin credentials you specified in your parameters to log in as an admin user.
 
-You can access Tableau Services Manager to perform administrative tasks by navigating to 'https://<IP Address or DNS>:8850'.  You can use the machine credentials you specified in your parameters to log in as TSM admin.
+You can access Tableau Services Manager to perform administrative tasks by navigating to 'https://[IP Address or DNS]:8850'.  You can use the machine credentials you specified in your parameters to log in as TSM admin.
 
 You can access the VM itself via SSH and the machine credentials you specified in your parameters.  The majority of Tableau Server administrative tasks do not require direct access to the virtual machine and can be accomplished via the access options listed above.  The exception are tasks such as upgrading Tableau Server or using the TSM command line client.
 
