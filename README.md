@@ -7,97 +7,96 @@
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
 </a>
 
-This template deploys a **single node Tableau Server instance on a Standard_D16_v3 VM instance running Ubuntu 16.04.0-LTS** in its own Virtual Network.
+This template deploys a **Standalone Tableau Server instance on a Standard_D16_v3 Virtual Machine running Ubuntu 16.04.0-LTS** in its own Virtual Network.
 
 `Tags: Tableau, Tableau Server, Business Intelligence, Analytics, Self-Service, Data Visualization`
 
-## Tableau Server and deployed resources overview
+## Overview
 
-Tableau Server on Azure is browser and mobile-based visual analytics anyone can use.  Publish interactive dashboards with Tableau Desktop and share them throughout your organization. Embedded or as a stand-alone application, you can empower your business to find answers in minutes, not months.  By deploying Tableau Server on Azure with this quickstart you can take full advantage of the power and flexibility of Azure Cloud infrastructure.  
+This ARM template allows you to quickly and easily deploy a standalone instance of Tableau Server on Azure.  The accompanying deployment guide is intended to provide guidance about the resources & processes involved in an automated deployment as well as providing resources for Tableau Server management.
 
-Tableau helps people see and understand their data by making it simple for the everyday data worker to perform ad-hoc visual analytics and data discovery as well as the ability to seamlessly build beautiful dashboards and reports. Tableau is designed to make connecting live to data of all types a simple process that doesn't require any coding or scripting. From cloud sources like Azure SQL Data Warehouse, to on-premise Hadoop clusters, to local spreadsheets, Tableau gives everyone the power to quickly start visually exploring data of any size to find new insights.
+Tableau Server is an online solution for sharing, distributing, and collaborating on business intelligence content created in Tableau. Tableau Server users can create workbooks and views, dashboards, and data sources in Tableau Desktop, and then publish this content to the server.  Tableau is designed to make connecting live to data of all types a simple process that doesn't require any coding or scripting. From cloud sources like Azure SQL Data Warehouse, to on-premise Hadoop clusters, to local spreadsheets, Tableau gives everyone the power to quickly start visually exploring data of any size to find new insights. 
 
-The following resources are deployed as part of the solution
+Tableau Server site and server administrators control who has access to server content to help protect sensitive data. Administrators can set user permissions on projects, workbooks, views, and data sources. Users can see and interact with the most up-to-date server content from anywhere, whether they use a browser or a mobile device. This template is for IT infrastructure architects, administrators, and DevOps professionals who are planning to implement or extend their Tableau Server workloads on the Azure Cloud.
 
-#### Tableau
+#### Costs & Licenses
 
-Tableau Server 2019.1 is deployed via the config-linux.sh script.  This config-linux.sh script performs several configuration tasks upon deployment including creating registration & configuration files, configuring firewall rules and perfomring a completely silent install of Tableau Server using an additional script located <a href="https://github.com/tableau/server-install-script-samples/tree/master/linux/automated-installer">here</a>
+You are responsible for the cost of the Azure services used while running this ARM template reference deployment.  There is no additional cost for using the ARM template.  The template allows you to deploy either a 14-day trial of Tableau Server or use a license you have already purchased.
 
-Each of these scripts can be called manually and customized by users.  To call the config-linux.sh script manually sue the following command:
+#### Prerequisites
 
-Bash:
-```bash
-sh ./config-linux.sh -u <vm_username> -p <vm_password> -h <tableau_server_admin_UN> -i <tableau_server_admin_UN> -j <zip_code> -k <country> -l <city> -m <last_name> -n <industry> -o yes -q <job_title> -r <phone_number> -s <company_name> -t <state> -v <department> -w <first_name> -x <email_address>
-```
+Before deploying Tableau Server we recommend that you become familiar with Azure infrastructure services (specific resources & documentation are listed below) and the <a href=https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview>Azure Resource Manager</a> which you will use to manage the resources after deployment.
 
-#### Microsoft Azure
-
-This template deploys the following Azure resources.  For information on the cost of these resources please use the pricing calculator found here: https://azure.microsoft.com/en-us/pricing/calculator/
-
-<img src="https://github.com/maddyloo/tableau-server-single-node/blob/master/images/azure_single_node.png"/>
-
-+ **Virtual Network**: New (or existing) virtual network that contains all relevant resources required by the Tableau Server install
-+ **Virtual Machine**: Standard_D16-v3 instance
-+ **Network Interface**: Allows Azure VM to communicate with the internet
-+ **Public IP Address**: Static Public IP that allows users to access Tableau Server
-+ **Network Security Group**: Limits traffic to Azure VM (RDP/SSH & port 80/22 only)
-
-## Prerequisites
-
-By default this template will install a 12-day free trial of Tableau Server.  To switch to a licensed version please contact your Tableau Sales representative.  
+You will need access to an Azure account to deploy this template.  During deployment you can choose to install a trial version of Tableau Server or bring your own license. 
 
 ## Deployment steps
 
-You can click the "Deploy to Azure" button at the beginning of this document or follow the following instructions for command line deployment using the scripts in the root of this repo.
+There are several options available for deploying this ARM template.  Once you have submitted your deployment template it will take approximately 25 minutes for all of the resources to be initialized and configured.  The deployment relies on several files - **azuredeploy.json** deploys and configures Azure resources (listed below); **azuredeploy.parameters.json** lists the parameter inputs necessary to configure the ARM template.  You can download and modofya copy of the templates and scripts as necessary if you would like to create a customized installation.
 
-To deploy this template using the scripts from the root of this repo: 
+#### Azure Resource Manager
 
-Powershell:
-```PowerShell
-.\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation 'west us' -ArtifactsStagingDirectory 'tableau-server-single-node' -UploadArtifacts 
-```
+You can deploy the template via the Azure Resource Manager UI by clicking the "Deploy to Azure" button at the top of this guide or selecting Tableau Server single node from the <a href=https://azure.microsoft.com/en-us/resources/templates/tableau-server-single-node>Azure Quickstart Templates</a> web page.
+
+#### Command line
+
+You can optionally deploy this template following the instructions found <a href=https://github.com/Azure/azure-quickstart-templates/tree/master/1-CONTRIBUTION-GUIDE>here</a> using your command line client of choice.
+
+#### Partially automated
+
+You can use the config-linux.sh script separately from the ARM template to perform a silent install of tableau server by running the following command.  This requires you to have already provisioned an Ubuntu virtual machine following Tableau's <a href=https://onlinehelp.tableau.com/current/server/en-us/server_hardware_min.htm>hardware requirements</a>.
+
 Bash:
 ```bash
-azure-group-deploy.sh -a tableau-server-single-node -l westus -u
+sh ./config-linux.sh -u <vm_username> -p <vm_password> -h <tableau_server_admin_UN> -i <tableau_server_admin_UN> -j <zip_code> -k <country> -l <city> -m <last_name> -n <industry> -o yes -q <job_title> -r <phone_number> -s <company_name> -t <state> -v <department> -w <first_name> -x <email_address> [-y <license_key>]
 ```
+
+## Resources
+
+#### Microsoft Azure
+
+This template deploys the following Azure resources.  For information on the cost of these resources please use Azure's <a href=https://azure.microsoft.com/en-us/pricing/calculator>pricing calculator</a>.  This template is designed to automate the Tableau Server delpoyment process.  However if you would like to step through the process manually you can use this reference architecture and resource details to create your own environment.
+
+<img src="https://github.com/maddyloo/tableau-server-single-node/blob/master/images/azure_single_node.png"/>
+
++ <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview>**Virtual Network**</a>: A virtual network located in a single Azure region that contains the deployed resources and allows them to communicate with each other.
++ <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm>**Public IP Address**</a>: IPv4 address that persists separately from the VM and includes a registered DNS name for the machine it is attached to.
++ <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface>**Network Interface**</a>: Enables an Azure VM to communicate with the internet.  Associated with a virtual machine and an IP address.
++ <a href=https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group>**Network Security Group**</a>: Enables you to filter the network traffic that can flow in and out of the virtual network subnets & network interfaces.  Default settings allow traffic inbound from within the Virtual Network the machine is deployed in - we've added these additional rules:
+    + Port 80 - public TCP access to your Tableau Server.  By default this is set as open to the world, meaning anyone with the IP or DNS of the machine and Tableau Server credentials can access the deployed Tableau Server as a user.  You can limit this access to a given IP range after deployment via the Azure portal.
+    + Port 223 - SSH traffic is limited to the source CIDR determined during deployment.   Best practice is to limit SSH access to the Tableau Server or machine administrator.  
+    + Port 8850 - HTTPS access to Tablea Services Manager UI which allows you to perform Tableau Server administration tasks (stopping & restarting Tableau Server, adding nodes, etc.)
++ <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/linux/overview>**Virtual Machine**>/a>: Standard D16 v3 (16 vCPUs, 64 GB mem) running Ubuntu 16.04.0-LTS with 2 attached disks (30, 64 GiB SSD) with Tableau Server installed
+    + Access to the VM is controlled by username/password authentication which you specify in the template parameters.  Please ensure you follow Azure's username and password <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq>requirements</a>
+
+#### Tableau Server
+
+When the resource template creates the Virtual Machine listed above it executes a startup script named config-linux.sh (as root user) to perform a silent, automated install of Tableau Server.  For more information about these steps you can refer to our <a href=https://onlinehelp.tableau.com/current/server/en-us/automated_install_windows.htm>documentation</a>.   
+
+The steps performed by the configuration script are as follows:
++ Create secrets, registration.json & config.json files to reflect the parametrized inputs from the template
++ Download the Tableau Server <a href=https://www.tableau.com/support/releases/server>installer</a> - this tempalte is currently using Linux version 2019.1.2
++ Download the automated installer script (maintained in a separate <a href=https://github.com/tableau/server-install-script-samples/tree/master/linux/automated-installer>github repo</a>) and modify permissions.
++ Execute command to perform a silent install (refer to previous bullet for additional documentation)
++ Clean up all installation & configuration files
+
+If you would like to learn more about the steps required for a manual deplyoment (which have been automated in teh script) please refer to these resources:
++ <a href=https://onlinehelp.tableau.com/current/guides/everybody-install-linux/en-us/everybody_admin_intro.htm>Tableau Server on Linux</a>
++ <a href=https://onlinehelp.tableau.com/current/server/en-us/ts_azure_welcome.htm>Tableau Server on Azure</a>
 
 ## Usage
 
-The following parameters require input to customize your isntallation of Tableau Server:
+#### Connecting
 
-+ **adminUsername**:
-+ **adminPassword**:
-+ **tableau_admin_password**:
-+ **tableau_admin_username**:
-+ **OS**:
-+ **registration_first_name**:
-+ **registration_last_name**:
-+ **registration_email**:
-+ **registration_company**:
-+ **registration_title**:
-+ **registration_department**:
-+ **registration_industry**:
-+ **registration_phone**:
-+ **registration_city**:
-+ **registration_state**:
-+ **registration_zip**:
-+ **registration_country**:
-+ **source_CIDR**:
+Once the deployment is completed you can access Tableau Server by navigating to 'http://<IP Address or DNS>'.  You can use the tableau admin credentials you specified in your parameters to log in as an admin user.
 
-#### Connect
+You can access Tableau Services Manager to perform administrative tasks by navigating to 'https://<IP Address or DNS>:8850'.  You can use the machine credentials you specified in your parameters to log in as TSM admin.
 
-Navigate to Tableau Server using the public IP address: http://- Public IP -:80
+You can access the VM itself via SSH and the machine credentials you specified in your parameters.  The majority of Tableau Server administrative tasks do not require direct access to the virtual machine and can be accomplished via the access options listed above.  The exception are tasks such as upgrading Tableau Server or using the TSM command line client.
 
-If you are a Tableau Server admin then you can navigate to http://- Public IP -:8850 to access Tableau Services Manager to perform admin tasks: https://onlinehelp.tableau.com/current/server-linux/en-us/tsm_overview.htm
+#### Getting Started with Tableau Server
++ Getting started with <a href=https://onlinehelp.tableau.com/current/server/en-us/get_started_server.htm>Tableau Server</a>
++ Walkthrough of Tableau Server <a href=https://www.tableau.com/learn/welcome-tableau-server-trial>trial experience</a>
++ Tableau + Azure <a href=https://www.tableau.com/solutions/azure>resources</a>
 
-#### Management
-
-Manage your Azure resources directly from your Azure portal.  Use the web UI and Desktop Interface to adminsitrate your Tableau Server instance: https://onlinehelp.tableau.com/current/server/en-us/admin.htm
-
-If you are a machine admin then you can SSH directly into the machine as necessary to make changes to the system, upgrade, apply patches, etc.  In day-to-day practice Tableau Server does not require you to monitor the machine directly.
-
-## Notes
-
-Follow these requirements when setting parameters: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-username-requirements-when-creating-a-vm
-
-This template is intended as a sample for how to install Tableau Server.  If you choose to run a production version of Tableau Server you are responsible for managing the cost & security of your Azure & Tableau deployment.  This version has been written by Madeleine Corneli and is not officially endorsed by Tableau Software.
+#### Azure resource Management
+Once these resources have been deployed they don't require significant management or updates.  There are exceptions that would require you to access the Azure Resource manager such as: adjust network security settings, change instance sizes, upgrage instances, add additional nodes/resources.  For a production or proof-of-conecpt environment you will want to ensure you are consistently monitoring the cost, performance & security of the resources above. Azure provides extensive <a href=https://docs.microsoft.com/en-us/azure/azure-resource-manager/manage-resources-portal>documentation</a> for all of its resources.
