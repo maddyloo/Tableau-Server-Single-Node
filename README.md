@@ -79,7 +79,7 @@ The steps performed by the configuration script are as follows:
 + Execute command to perform a silent install (refer to previous bullet for additional documentation)
 + Clean up all installation & configuration files
 
-If you would like to learn more about the steps required for a manual deplyoment (which have been automated in teh script) please refer to these resources:
+If you would like to learn more about the steps required for a manual deplyoment (which have been automated in the script) please refer to these resources:
 + <a href=https://onlinehelp.tableau.com/current/guides/everybody-install-linux/en-us/everybody_admin_intro.htm>Tableau Server on Linux</a>
 + <a href=https://onlinehelp.tableau.com/current/server/en-us/ts_azure_welcome.htm>Tableau Server on Azure</a>
 
