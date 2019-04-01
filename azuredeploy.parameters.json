@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
+    "resourceGroupLocation": {
+      "value": "West US"
+    },
     "adminUsername": {
       "value": "locadmin"
     },
@@ -52,7 +55,6 @@
     },
     "source_CIDR": {
       "value": "192.195.4.0/24"
-
     }
   }
 }
