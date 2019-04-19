@@ -56,7 +56,7 @@ sh ./config-linux.sh -u <vm_username> -p <vm_password> -h <tableau_server_admin_
 
 This template deploys the following Azure resources.  For information on the cost of these resources please use Azure's <a href=https://azure.microsoft.com/en-us/pricing/calculator>pricing calculator</a>.  This template is designed to automate the Tableau Server deployment process.  However if you would like to step through the process manually you can use this reference architecture and resource details to create your own environment.
 
-<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/Tableau-Server-Single-Node/images/azure_single_node.png"/>
+<img src="https://github.com/maddyloo/tableau-server-single-node/blob/master/images/azure_single_node.png"/>
 
 + <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview>**Virtual Network**</a>: A virtual network located in a single Azure region that contains the deployed resources and allows them to communicate with each other.
 + <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm>**Public IP Address**</a>: IPv4 address that persists separately from the VM and includes a registered DNS name for the machine it is attached to.
@@ -100,7 +100,7 @@ You can access the VM itself via SSH and the machine credentials you specified i
 + Tableau + Azure <a href=https://www.tableau.com/solutions/azure>resources</a>
 
 #### Azure resource Management
-Once these resources have been deployed they don't require significant management or updates.  There are exceptions that would require you to access the Azure Resource manager such as: adjust network security settings, change instance sizes, upgrage instances, add additional nodes/resources.  For a production or proof-of-conecpt environment you will want to ensure you are consistently monitoring the cost, performance & security of the resources above. Azure provides extensive <a href=https://docs.microsoft.com/en-us/azure/azure-resource-manager/manage-resources-portal>documentation</a> for all of its resources.
+Once these resources have been deployed they don't require significant management or updates.  There are exceptions that would require you to access the Azure Resource manager such as: adjust network security settings, change instance sizes, upgrage instances, add additional nodes/resources.  For a production or proof-of-concept environment you will want to ensure you are consistently monitoring the cost, performance & security of the resources above. Azure provides extensive <a href=https://docs.microsoft.com/en-us/azure/azure-resource-manager/manage-resources-portal>documentation</a> for all of its resources.
 
 #### Troubleshooting & Support
 
