@@ -356,8 +356,8 @@
     },
     "resources": [
       {
-        "name": "linuxappdeploy",
-        "type": "extensions",
+        "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
         "location": "[parameters('resourceGroupLocation')]",
         "apiVersion": "2016-03-30",
         "dependsOn": [
@@ -367,8 +367,8 @@
           "displayName": "linuxappdeploy"
         },
         "properties": {
-          "publisher": "Microsoft.Azure.Extensions",
-          "type": "CustomScript",
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
