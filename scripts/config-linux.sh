@@ -26,7 +26,6 @@ do
  w) FIRST_NAME=${OPTARG};;
  x) EMAIL=${OPTARG};;
  y) LICENSE_KEY=${OPTARG};;
- z) ACCEPT_EULA=${OPTARG};;
 esac
 done
 
@@ -78,14 +77,11 @@ echo "modified automated-installer" >> installer_log.txt
 wait
 
 # run automated installer (install trial if no license key) - only run if user has accepted eula
-if [ "$ACCEPT_EULA" == "yes"]
+if [ -z "$LICENSE_KEY" ]
 then
-  if [ -z "$LICENSE_KEY" ]
-  then
-        sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
-  else
-        sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
-  fi
+      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
+else
+      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
 fi
 
 wait

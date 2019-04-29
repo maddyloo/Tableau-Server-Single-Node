@@ -23,6 +23,8 @@ Tableau Server site and server administrators control who has access to server c
 
 You are responsible for the cost of the Azure services used while running this ARM template reference deployment.  There is no additional cost for using the ARM template.  The template allows you to deploy either a 14-day trial of Tableau Server or use a license you have already purchased.
 
+As part of the deployment process you are prompted to accept the Tableau EULA.  Please enter 'yes' in the respective parameter to indicate you have read and accepted the Tableau EULA which can be found <a href=https://mkt.tableau.com/files/tableau_eula.pdf>here</a>. 
+
 #### Prerequisites
 
 Before deploying Tableau Server we recommend that you become familiar with Azure infrastructure services (specific resources & documentation are listed below) and the <a href=https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview>Azure Resource Manager</a> which you will use to manage the resources after deployment.
