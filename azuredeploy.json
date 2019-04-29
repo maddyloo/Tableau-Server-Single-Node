@@ -374,8 +374,8 @@
           "displayName": "linuxappdeploy"
         },
         "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "CustomScriptExtension",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
