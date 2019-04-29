@@ -78,7 +78,8 @@ echo "modified automated-installer" >> installer_log.txt
 wait
 
 # run automated installer (install trial if no license key) - only run if user has accepted eula
-if [ "$ACCEPT_EULA" == "yes"]  
+if [ "$ACCEPT_EULA" == "yes"]
+then
   if [ -z "$LICENSE_KEY" ]
   then
         sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
