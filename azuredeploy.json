@@ -122,6 +122,13 @@
       "metadata": {
         "description": "Enter Tableau Server License key.  ** If you would like to run a 2-week free trial please leave BLANK."
       }
+    },
+    "accept_eula": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Please type 'yes' to accept the Tableau EULA which can be found here: https://mkt.tableau.com/files/tableau_eula.pdf"
+      }
     }
   },
   "variables": {
@@ -158,7 +165,7 @@
       }
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
-    "UbuntuExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -y ''', parameters('license_key'), ''' -w ''', parameters('registration_first_name'), '''')]",
+    "UbuntuExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -y ''', parameters('license_key'), ''' -w ''', parameters('accept_eula'), ''' -z ''', parameters('registration_first_name'), '''')]",
     "UbCmdWrapper": "[concat('sh ./config-linux.sh ', variables('UbuntuExecute'))]",
     "LinuxsecurityRules": [
       {
