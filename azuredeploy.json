@@ -7,7 +7,7 @@
       "metadata": {
           "description": "The base URI where artifacts required by this template are located including a trailing '/'"
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/tableau-server-single-node/"
+      "defaultValue": "https://raw.githubusercontent.com/maddyloo/Tableau-Server-Single-Node/master/"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
