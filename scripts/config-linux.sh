@@ -63,10 +63,17 @@ echo '{
 wait
 
 # download tableau server .deb file
-wget --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.1.2/tableau-server-2019-1-2_amd64.deb
+# retry on fail
+wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.1.2/tableau-server-2019-1-2_amd64.deb
+
+if [ $? -ne 0 ]
+then
+  echo "wget of Tableau installer failed" >> installer_log.txt
+  exit 1;
+fi
 
 # download automated-installer
-wget --remote-encoding=UTF-8 --output-document=automated-installer.sh https://raw.githubusercontent.com/tableau/server-install-script-samples/master/linux/automated-installer/automated-installer
+wget --remote-encoding=UTF-8 --output-document=automated-installer.sh https://raw.githubusercontent.com/maddyloo/Tableau-Server-Single-Node/master/scripts/automated-installer
                                                               
 wait
 chmod +x automated-installer.sh
@@ -76,7 +83,7 @@ echo "modified automated-installer" >> installer_log.txt
 # ensure everything is finished
 wait
 
-# run automated installer (install trial if no license key) - only run if user has accepted eula
+# run automated installer (install trial if no license key)
 if [ -z "$LICENSE_KEY" ]
 then
       sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force

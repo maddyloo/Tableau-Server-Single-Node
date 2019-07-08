@@ -1,5 +1,4 @@
 # Tableau Server Single Node
-<img src="https://github.com/maddyloo/tableau-server-single-node/blob/master/images/tableau_rgb.png"/>
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F100-blank-template%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 </a>
@@ -107,4 +106,4 @@ Once these resources have been deployed they don't require significant managemen
 #### Troubleshooting & Support
 
 + Make sure that you entered all parameters correctly.  Passwords should conform to <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-username-requirements-when-creating-a-vm">Azure standards</a> and source CIDR should follow official syntax (0.0.0.0/24)
-+ This ARM template is community supported - please use Github or <a href=https://community.tableau.com/community/forums/content>Tableau's community forum</a> to share comments or issues you may find.
++ This ARM template is made available <a href=https://www.tableau.com/support/itsupport>'as-is'</a> - please use Github or <a href=https://community.tableau.com/community/forums/content>Tableau's community forum</a> to share comments or issues you may find.
