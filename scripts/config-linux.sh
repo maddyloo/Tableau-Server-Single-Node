@@ -26,7 +26,7 @@ do
  w) FIRST_NAME=${OPTARG};;
  x) EMAIL=${OPTARG};;
  y) LICENSE_KEY=${OPTARG};;
- z) INSTALL_SCRIPT_URL=${OPTARG};;
+ d) INSTALL_SCRIPT_URL=${OPTARG};;
 esac
 done
 
