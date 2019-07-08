@@ -413,11 +413,5 @@
         }
       ]
     }
-  ],
-  "outputs": {
-    "installscriptURL" : {
-      "type" : "string",
-      "value": "[variables('installscripturi')]"
-    }
-  }
+  ]
 }
