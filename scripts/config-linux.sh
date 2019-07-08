@@ -74,7 +74,7 @@ then
 fi
 
 # download automated-installer
-wget --remote-encoding=UTF-8 --output-document=automated-installer.sh "$INSTALL_SCRIPT_URL"
+wget --remote-encoding=UTF-8 --output-document=automated-installer.sh $INSTALL_SCRIPT_URL
                                                               
 wait
 chmod +x automated-installer.sh
