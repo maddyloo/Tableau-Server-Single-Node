@@ -80,6 +80,7 @@ wait
 chmod +x automated-installer.sh
 
 echo "modified automated-installer" >> installer_log.txt
+echo "$INSTALL_SCRIPT_URL" >> installer_log.txt
 
 # ensure everything is finished
 wait
