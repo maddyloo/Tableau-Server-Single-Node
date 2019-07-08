@@ -26,6 +26,7 @@ do
  w) FIRST_NAME=${OPTARG};;
  x) EMAIL=${OPTARG};;
  y) LICENSE_KEY=${OPTARG};;
+ z) INSTALL_SCRIPT_URL=${OPTARG};;
 esac
 done
 
@@ -73,7 +74,7 @@ then
 fi
 
 # download automated-installer
-wget --remote-encoding=UTF-8 --output-document=automated-installer.sh https://raw.githubusercontent.com/maddyloo/Tableau-Server-Single-Node/master/scripts/automated-installer
+wget --remote-encoding=UTF-8 --output-document=automated-installer.sh "$INSTALL_SCRIPT_URL"
                                                               
 wait
 chmod +x automated-installer.sh
