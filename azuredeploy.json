@@ -23,6 +23,14 @@
       },
       "defaultValue": "[resourceGroup().location]"
     },
+    "VMSize": {
+      "type": "string",
+      "allowedValues": ["Standard_D16s_v3","Standard_E16s_v3","Standard_F16s_v2","Standard_D4s_v3"],
+      "metadata": {
+        "description": "Please select the size of the VM you wish to deploy.  Tableau Server should be deployed on a machine with at least 16 vCPUs.  Standard_D4s_v3 is provided for testing only.  Read more about sizing options here: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes-general"
+      },
+      "defaultValue": "Standard_D16s_v3"
+    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -33,13 +41,6 @@
       "type": "securestring",
       "metadata": {
         "description": "Password for the Virtual Machine."
-      }
-    },
-    "publicIpResourceGroupName": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().name]",
-      "metadata": {
-        "description": "Name of the resource group for the public ip address"
       }
     },
     "source_CIDR": {
@@ -153,36 +154,19 @@
   "variables": {
     "virtualNetworkName": "TABVNET",
     "NSGName": "TABNSG",
-    "nsgId": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('NSGName'))]",
     "publicIPAddressType": "Dynamic",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
-    "subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]",
     "numberOfInstances": 1,
-    "Ubuntu": {
+    "ubuntuscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-linux.sh', parameters('_artifactsLocationSasToken')))]",
+    "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
+    "virtualMachineSize": "[parameters('VMSize')]",
+    "imageReference": {
       "publisher": "Canonical",
       "offer": "UbuntuServer",
       "sku": "16.04.0-LTS",
       "version": "latest"
-    },
-    "ubuntuscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-linux.sh', parameters('_artifactsLocationSasToken')))]",
-    "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
-    "virtualMachineSize": "Standard_D16s_v3",
-    "imageReference": "[variables('Ubuntu')]",
-    "publicIpAddressId": {
-      "id": "[resourceId(parameters('publicIpResourceGroupName'), 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
-    },
-    "LinConfiguration": {
-      "disablePasswordAuthentication": true,
-      "ssh": {
-        "publicKeys": [
-          {
-            "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-            "keyData": "[parameters('adminPassword')]"
-          }
-        ]
-      }
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
     "UbuntuExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -g ''', variables('installscripturi'), ''' -y ''', parameters('license_key'), ''' -w ''', parameters('registration_first_name'), '''')]",
@@ -234,7 +218,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2019-05-01",
       "name": "pid-6c922c23-cc65-4b76-8290-74feb0f3c476",
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -266,7 +250,7 @@
             "properties": {
               "addressPrefix": "[variables('subnet1Prefix')]",
               "networkSecurityGroup": {
-                "id": "[variables('nsgId')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('NSGName'))]"
               }
             }
           }
@@ -323,11 +307,11 @@
             "name": "ipconfig1",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', concat('tabpip', copyIndex(1)))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('tabpip', copyIndex(1)))]"
               },
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('subnet1Ref')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('virtualNetworkName'),variables('subnet1Name'))]"
               }
             }
           }
@@ -337,7 +321,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat('tableau', copyIndex(1))]",
-      "apiVersion": "2019-03-01",
+      "apiVersion": "2019-07-01",
       "location": "[parameters('location')]",
       "copy": {
         "name": "virtualMachineLoop",
@@ -387,7 +371,7 @@
           "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[parameters('location')]",
-          "apiVersion": "2019-03-01",
+          "apiVersion": "2019-07-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
           ],
