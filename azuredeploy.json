@@ -163,9 +163,9 @@
     "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
     "virtualMachineSize": "[parameters('VMSize')]",
     "imageReference": {
-      "publisher": "Canonical",
-      "offer": "UbuntuServer",
-      "sku": "16.04.0-LTS",
+      "publisher": "RedHat",
+      "offer": "RHEL",
+      "sku": "7-RAW",
       "version": "latest"
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",

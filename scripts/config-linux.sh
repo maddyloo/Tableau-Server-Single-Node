@@ -65,7 +65,8 @@ wait
 
 # download tableau server .deb file
 # retry on fail
-wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1_amd64.deb
+# wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1_amd64.deb
+wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
 
 if [ $? -ne 0 ]
 then
