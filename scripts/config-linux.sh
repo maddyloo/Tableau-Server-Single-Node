@@ -45,7 +45,7 @@ echo "{
  \"eula\" : \"$EULA\",
  \"title\" : \"$TITLE\",
  \"phone\" : \"$PHONE\",
- \"company\" : \"$COMPANY\",
+ \"company\" : \"$COMPANY-azure-arm-linux\",
  \"state\" : \"$STATE\",
  \"department\" : \"$DEPARMENT\",
  \"first_name\" : \"$FIRST_NAME\",
