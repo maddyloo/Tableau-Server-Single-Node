@@ -165,7 +165,7 @@
     "imageReference": {
       "publisher": "Canonical",
       "offer": "UbuntuServer",
-      "sku": "18.04.0-LTS",
+      "sku": "18.04-LTS",
       "version": "latest"
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
