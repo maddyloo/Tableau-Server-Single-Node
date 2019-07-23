@@ -98,8 +98,8 @@ fi
 wait
 
 # remove all install files
-rm registration.json
-rm secrets
-rm tableau-installer.rpm
-rm automated-installer.sh
-rm config.json
+# rm registration.json
+# rm secrets
+# rm tableau-installer.rpm
+# rm automated-installer.sh
+# rm config.json
