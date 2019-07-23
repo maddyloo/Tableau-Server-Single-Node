@@ -88,9 +88,9 @@ wait
 # run automated installer (install trial if no license key)
 if [ -z "$LICENSE_KEY" ]
 then
-      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
+      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force
 else
-      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
+      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force
 fi
 
 wait
@@ -98,6 +98,6 @@ wait
 # remove all install files
 rm registration.json
 rm secrets
-rm tableau-installer.deb
+rm tableau-installer.rpm
 rm automated-installer.sh
 rm config.json
