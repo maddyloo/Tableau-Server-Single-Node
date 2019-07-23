@@ -98,6 +98,10 @@ fi
 
 wait
 
+# if on RHEL, open firewall
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --reload
+
 # remove all install files
 # rm registration.json
 # rm secrets
