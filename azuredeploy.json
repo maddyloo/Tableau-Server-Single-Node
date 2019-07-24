@@ -404,5 +404,11 @@
         }
       ]
     }
-  ]
+  ],
+  "outputs": {
+    "linuxCommand": {
+      "type": "string",
+      "value": "[variables('LiCmdWrapper')]"
+    }
+  }
 }
