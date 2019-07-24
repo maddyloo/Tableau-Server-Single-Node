@@ -94,14 +94,18 @@ wait
 if [ -z "$LICENSE_KEY" ]
 then
   if [ $OS = "RHEL"]
+  then
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force
   else
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force    
+  fi
 else
   if [ $OS = "RHEL"]
+  then
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force
   else
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
+  fi
 fi
 
 wait
