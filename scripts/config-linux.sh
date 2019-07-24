@@ -67,7 +67,7 @@ wait
 
 # download tableau server .deb or.rpm file
 # retry on fail
-if [ $OS == "RHEL"]
+if [ "$OS" == "RHEL"]
 then
   wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
 else
@@ -94,14 +94,14 @@ wait
 # run automated installer (install trial if no license key)
 if [ -z "$LICENSE_KEY" ]
 then
-  if [ $OS == "RHEL"]
+  if [ "$OS" == "RHEL"]
   then
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force
   else
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force    
   fi
 else
-  if [ $OS == "RHEL"]
+  if [ "$OS" == "RHEL"]
   then
     sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force
   else
