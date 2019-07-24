@@ -72,6 +72,7 @@ then
   wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
 else
   wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1_amd64.deb
+fi
 
 if [ $? -ne 0 ]
 then
