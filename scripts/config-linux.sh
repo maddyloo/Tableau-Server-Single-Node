@@ -4,12 +4,13 @@
 # sh ./config-linux.sh -u <username> -p <password> -h admin -i admin -j 98107 -k usa -l seattle -m data -n tech -o yes -q pm -r 8888888 -s tableau -t wa -v dev -w jamie -x jdata@tableau.com [-y <license key>]
 # customized to reflect machine admin username and admin password
 
-while getopts u:p:g:h:i:j:k:l:m:n:o:q:r:s:t:v:w:x:y: option
+while getopts u:p:f:g:h:i:j:k:l:m:n:o:q:r:s:t:v:w:x:y: option
 do
  case "${option}"
  in
  u) USER=${OPTARG};;
  p) PASSWORD=${OPTARG};;
+ f) OS=${OPTARG};;
  g) INSTALL_SCRIPT_URL=${OPTARG};;
  h) TS_USER=${OPTARG};;
  i) TS_PASS=${OPTARG};;
@@ -64,10 +65,13 @@ echo '{
 }' >> config.json
 wait
 
-# download tableau server .deb file
+# download tableau server .deb or.rpm file
 # retry on fail
-# wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1_amd64.deb
-wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
+if [ $OS = "RHEL"]
+then
+  wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
+else
+  wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1_amd64.deb
 
 if [ $? -ne 0 ]
 then
@@ -89,11 +93,15 @@ wait
 # run automated installer (install trial if no license key)
 if [ -z "$LICENSE_KEY" ]
 then
-      # sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
-      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force
+  if [ $OS = "RHEL"]
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force
+  else
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force    
 else
-      # sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
-      sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force
+  if [ $OS = "RHEL"]
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force
+  else
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
 fi
 
 wait
@@ -102,9 +110,9 @@ wait
 firewall-cmd --zone=public --add-port=80/tcp --permanent
 firewall-cmd --reload
 
-# remove all install files
-# rm registration.json
-# rm secrets
-# rm tableau-installer.rpm
-# rm automated-installer.sh
-# rm config.json
+remove all install files
+rm registration.json
+rm secrets
+rm tableau-installer.rpm
+rm automated-installer.sh
+rm config.json
