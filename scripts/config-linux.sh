@@ -117,6 +117,11 @@ firewall-cmd --reload
 remove all install files
 rm registration.json
 rm secrets
-rm tableau-installer.rpm
+if [ $OS = "RHEL"]
+then
+  rm tableau-installer.rpm
+else
+  rm tableau-installer.deb
+fi
 rm automated-installer.sh
 rm config.json
