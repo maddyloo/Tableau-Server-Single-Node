@@ -121,7 +121,7 @@ fi
 # remove all install files
 rm registration.json
 rm secrets
-if [ $OS == "RHEL"]
+if [ "$OS" == "RHEL" ]
 then
   rm tableau-installer.rpm
 else
