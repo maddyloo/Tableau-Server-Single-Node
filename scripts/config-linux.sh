@@ -112,8 +112,11 @@ fi
 wait
 
 # if on RHEL, open firewall
-firewall-cmd --zone=public --add-port=80/tcp --permanent
-firewall-cmd --reload
+if [ "$OS" == "RHEL" ]
+then
+  firewall-cmd --zone=public --add-port=80/tcp --permanent
+  firewall-cmd --reload
+fi
 
 # remove all install files
 # rm registration.json
