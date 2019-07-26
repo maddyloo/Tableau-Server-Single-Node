@@ -5,5 +5,5 @@
   "summary": "This template deploys a new instance of Tableau Server on a single Azure compute node along with all required infrastructure elements.  This template supports deployment on Ubuntu based machines.",
   "githubUsername": "maddyloo",
   "dateUpdated": "2019-03-28",
-  "type": "Quickstart"
+  "type": "QuickStart"
 }
