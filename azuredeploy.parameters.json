@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
 "parameters": {
   "OS": {
-    "value": "CentOS"
+    "value": "CentOS 7.5"
   },
   "adminUsername": {
     "value": "locadmin"
