@@ -67,11 +67,12 @@ wait
 
 # download tableau server .deb or.rpm file
 # retry on fail
+# version: 2019.3.1
 if [ "$OS" == "Ubuntu 16.04 LTS" ]
 then
-  wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1_amd64.deb
+  wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2019.4.0/tableau-server-2019-4-0_amd64.deb
 else
-  wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
+  wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2019.4.0/tableau-server-2019-4-0.x86_64.rpm
 fi
 
 if [ $? -ne 0 ]
@@ -112,6 +113,7 @@ fi
 wait
 
 # if on RHEL, open firewall
+# on some RHEL versions, need to yum install firewalld?
 if [ "$OS" == "RHEL 7.6" ] || [ "$OS" == "CentOS 7.5" ]
 then
   firewall-cmd --zone=public --add-port=80/tcp --permanent
