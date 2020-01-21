@@ -1,12 +1,21 @@
 # Tableau Server Single Node
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F100-blank-template%2Fazuredeploy.json" target="_blank">
+
+<IMG SRC="https://azurequickstartsservice.blob.core.windows.net/badges/tableau-server-single-node/PublicLastTestDate.svg" />&nbsp;
+<IMG SRC="https://azurequickstartsservice.blob.core.windows.net/badges/tableau-server-single-node/PublicDeployment.svg" />&nbsp;
+
+<IMG SRC="https://azurequickstartsservice.blob.core.windows.net/badges/tableau-server-single-node/FairfaxLastTestDate.svg" />&nbsp;
+<IMG SRC="https://azurequickstartsservice.blob.core.windows.net/badges/tableau-server-single-node/FairfaxDeployment.svg" />&nbsp;
+
+<IMG SRC="https://azurequickstartsservice.blob.core.windows.net/badges/tableau-server-single-node/BestPracticeResult.svg" />&nbsp;
+<IMG SRC="https://azurequickstartsservice.blob.core.windows.net/badges/tableau-server-single-node/CredScanResult.svg" />&nbsp;
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Ftableau-server-single-node%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F100-blank-template%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Ftableau-server-single-node%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
 </a>
 
-This template deploys a **Standalone Tableau Server instance on a Standard_D16_v3 Virtual Machine running Ubuntu 16.04.0-LTS** in its own Virtual Network.
+This template deploys a **Standalone Tableau Server instance on a Virtual Machine running Ubuntu, RHEL or CentOS** in its own Virtual Network.
 
 `Tags: Tableau, Tableau Server, Business Intelligence, Analytics, Self-Service, Data Visualization`
 
@@ -22,7 +31,7 @@ Tableau Server site and server administrators control who has access to server c
 
 You are responsible for the cost of the Azure services used while running this ARM template reference deployment.  There is no additional cost for using the ARM template.  The template allows you to deploy either a 14-day trial of Tableau Server or use a license you have already purchased.
 
-As part of the deployment process you are prompted to accept the Tableau EULA.  Please enter 'yes' in the respective parameter to indicate you have read and accepted the Tableau EULA which can be found <a href=https://mkt.tableau.com/files/tableau_eula.pdf>here</a>. 
+As part of the deployment process you are prompted to accept the Tableau EULA.  Please enter 'Yes' in the respective parameter to indicate you have read and accepted the Tableau EULA which can be found <a href=https://mkt.tableau.com/files/tableau_eula.pdf>here</a>.  If you do not accept the Tableau EULA the template will deploy the Azure resources but will not install Tableau Server. 
 
 #### Prerequisites
 
@@ -44,7 +53,7 @@ You can optionally deploy this template following the instructions found <a href
 
 #### Partially automated
 
-You can use the config-linux.sh script separately from the ARM template to perform a silent install of Tableau Server by running the following command.  This requires you to have already provisioned an Ubuntu virtual machine following Tableau's <a href=https://onlinehelp.tableau.com/current/server/en-us/server_hardware_min.htm>hardware requirements</a>.
+You can use the config-linux.sh script separately from the ARM template to perform a silent install of Tableau Server by running the following command.  This requires you to have already provisioned an Ubuntu, RHEL or CentOS virtual machine following Tableau's <a href=https://onlinehelp.tableau.com/current/server/en-us/server_hardware_min.htm>hardware requirements</a>.
 
 Bash:
 ```bash
@@ -57,7 +66,7 @@ sh ./config-linux.sh -u <vm_username> -p <vm_password> -h <tableau_server_admin_
 
 This template deploys the following Azure resources.  For information on the cost of these resources please use Azure's <a href=https://azure.microsoft.com/en-us/pricing/calculator>pricing calculator</a>.  This template is designed to automate the Tableau Server deployment process.  However if you would like to step through the process manually you can use this reference architecture and resource details to create your own environment.
 
-<img src="https://github.com/maddyloo/tableau-server-single-node/blob/master/images/azure_single_node.png"/>
+<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/tableau-server-single-node/images/azure_single_node.png"/>
 
 + <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview>**Virtual Network**</a>: A virtual network located in a single Azure region that contains the deployed resources and allows them to communicate with each other.
 + <a href=https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-ip-addresses-overview-arm>**Public IP Address**</a>: IPv4 address that persists separately from the VM and includes a registered DNS name for the machine it is attached to.
@@ -66,7 +75,7 @@ This template deploys the following Azure resources.  For information on the cos
     + Port 80 - public TCP access to your Tableau Server.  By default this is set as open to the world, meaning anyone with the IP or DNS of the machine and Tableau Server credentials can access the deployed Tableau Server as a user.  You can limit this access to a given IP range after deployment via the Azure portal.
     + Port 223 - SSH traffic is limited to the source CIDR determined during deployment.   Best practice is to limit SSH access to the Tableau Server or machine administrator.  
     + Port 8850 - HTTPS access to Tableau Services Manager UI which allows you to perform Tableau Server administration tasks (stopping & restarting Tableau Server, adding nodes, etc.)
-+ <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/linux/overview>**Virtual Machine**</a>: Standard D16 v3 (16 vCPUs, 64 GB mem) running Ubuntu 16.04.0-LTS with 2 attached disks (30, 64 GiB SSD) with Tableau Server installed
++ <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/linux/overview>**Virtual Machine**</a>: Standard D16 v3 (16 vCPUs, 64 GB mem) or a memory or compute optimized 16 vCPU instance running Ubuntu 16.04.0-LTS, RHEL 7.6 or CentOS 7.5 with 2 attached disks (30, 64 GiB SSD) with Tableau Server installed
     + Access to the VM is controlled by username/password authentication which you specify in the template parameters.  Please ensure you follow Azure's username and password <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq>requirements</a>
 + This template has a static GUID associated with it - allowing Azure & the template's creator to track usage and deployment statistics
 
@@ -76,7 +85,7 @@ When the resource template creates the Virtual Machine listed above it executes 
 
 The steps performed by the configuration script are as follows:
 + Create secrets, registration.json & config.json files to reflect the parametrized inputs from the template
-+ Download the Tableau Server <a href=https://www.tableau.com/support/releases/server>installer</a> - this tempalte is currently using Linux version 2019.1.2
++ Download the Tableau Server <a href=https://www.tableau.com/support/releases/server>installer</a> - this template is currently using Linux version 2019.4.0
 + Download the automated installer script (maintained in a separate <a href=https://github.com/tableau/server-install-script-samples/tree/master/linux/automated-installer>github repo</a>) and modify permissions.
 + Execute command to perform a silent install (refer to previous bullet for additional documentation)
 + Clean up all installation & configuration files
