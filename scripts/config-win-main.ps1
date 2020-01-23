@@ -19,7 +19,8 @@ Param(
     [string]$license_key,
     [string]$install_script_url,
     [string]$local_admin_user,
-    [string]$local_admin_pass
+    [string]$local_admin_pass,
+    [string]$eula
 )
 
 ### FILES
