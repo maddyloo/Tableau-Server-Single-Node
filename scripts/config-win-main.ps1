@@ -1,3 +1,6 @@
+## SCRIPT FOR MAIN BOX
+## command to call: 
+
 Param(
     [string]$ts_admin_un,
     [string]$ts_admin_pw,
@@ -23,7 +26,7 @@ Param(
 
 ## 1. make secrets.json file
 Set-Location "C:\"
-mkdir tabsetup
+mkdir tab
 
 $secrets = @{
     local_admin_user="$local_admin_user"
@@ -33,7 +36,7 @@ $secrets = @{
     product_keys=@("$license_key")
 }
 
-$secrets | ConvertTo-Json -depth 10 | Out-File "C:/tabsetup\secrets.json" -Encoding ASCII
+$secrets | ConvertTo-Json -depth 10 | Out-File "C:\tab\sc.json" -Encoding ASCII
 
 ## 2. make registration.json
 #TODO: add parameter for accepting eula
@@ -53,7 +56,7 @@ $registration = @{
     eula = "yes"
 }
 
-$registration | ConvertTo-Json -depth 10 | Out-File "C:\tabsetup\registration.json" -Encoding ASCII
+$registration | ConvertTo-Json -depth 10 | Out-File "C:\tab\rg.json" -Encoding ASCII
 
 ## 3. Create config file
 $config = @{
@@ -66,32 +69,25 @@ $config = @{
     topologyVersion = @{}
 }
 
-$config | ConvertTo-Json -depth 20 | Out-File "C:\tabsetup\myconfig.json" -Encoding ASCII
+$config | ConvertTo-Json -depth 20 | Out-File "C:\tab\cf.json" -Encoding ASCII
 
 ## 4. Download scripted installer .py (refers to Tableau's github page)
-Invoke-WebRequest -Uri $install_script_url -OutFile "C:\tabsetup\ScriptedInstaller.py"
+Invoke-WebRequest -Uri $install_script_url -OutFile "C:\tab\SI.py"
 
 ## 5. Download python .exe
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "C:\tabsetup\python-3.7.0.exe"
+Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "C:\tab\python-3.7.0.exe"
 
-## 6. Download Tableau Server 2018.2 .exe
-Invoke-WebRequest -Uri "https://downloads.tableau.com/esdalt/2019.4.1/TableauServer-64bit-2019-4-1.exe" -Outfile "C:\tabsetup\tableau-server-installer.exe"
+## 6. Download Tableau Server 2019.4 .exe
+Invoke-WebRequest -Uri "https://downloads.tableau.com/esdalt/2019.4.1/TableauServer-64bit-2019-4-1.exe" -Outfile "C:\tab\ts.exe"
 
 ### COMMANDS
 
 ## 1. Install python (and add to path) - wait for install to finish
-Start-Process -FilePath "C:\tabsetup\python-3.7.0.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
+Start-Process -FilePath "C:\tab\python-3.7.0.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
 
-## 2. Run installer script
-Set-Location "C:\Program Files (x86)\Python37-32\"
-
-## 3. Call python to run ScriptedInstaller.py with input files
-Start-Process -FilePath "C:\Program Files (x86)\Python37-32\python.exe" -ArgumentList "C:\tabsetup\ScriptedInstaller.py install --secretsFile C:\tabsetup\secrets.json --configFile C:\tabsetup\myconfig.json --registrationFile C:\tabsetup\registration.json C:\tabsetup\tableau-server-installer.exe --start yes" -Wait -NoNewWindow
-
-## 4. Open port 8850 for TSM access & 80 for Tableau Server access
+## 2. Open port 8850 for TSM access & 80 for Tableau Server access
 New-NetFirewallRule -DisplayName "TSM Inbound" -Direction Inbound -Action Allow -LocalPort 8850 -Protocol TCP
 New-NetFirewallRule -DisplayName "Tableau Server Inbound" -Direction Inbound -Action Allow -LocalPort 80 -Protocol TCP
 
-## 4. Clean up secrets
-Remove-Item "C:\tabsetup\secrets.json"
+## 3. Start SMB/file share on c drive
