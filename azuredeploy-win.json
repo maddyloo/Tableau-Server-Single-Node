@@ -366,7 +366,7 @@
           "vmSize": "[variables('virtualMachineSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('tableauvm', copyIndex(1))]",
+          "computerName": "[concat('tableau-main', copyIndex(1))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -399,7 +399,7 @@
       "resources": [
         {
           "condition": "[equals(parameters('accept_eula'), 'Yes')]",
-          "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
+          "name": "[concat('tableau-main', copyIndex(1),'/CustomScript')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           // "type": "extensions",
           "location": "[parameters('location')]",
