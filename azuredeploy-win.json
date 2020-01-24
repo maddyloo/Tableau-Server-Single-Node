@@ -428,56 +428,6 @@
           }
         }
       ]
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('tableau-jumpbox', copyIndex(1))]",
-      "apiVersion": "2019-07-01",
-      "location": "[parameters('location')]",
-      "copy": {
-        "name": "virtualMachineLoop",
-        "count": "[variables('numberOfInstances')]"
-      },
-      "dependsOn": [
-        "nicLoop"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          // change the machine size
-          "vmSize": "[variables('virtualMachineSize')]"
-        },
-        "osProfile": {
-          "computerName": "[concat('tableauvm', copyIndex(1))]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": "[variables('imageReference')[parameters('OS')]]",
-          "osDisk": {
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          },
-          "copy": [
-            {
-              "name": "dataDisks",
-              "count": 1,
-              "input": {
-                "diskSizeGB": 64,
-                "lun": "[copyIndex('dataDisks')]",
-                "createOption": "Empty"
-              }
-            }
-          ]
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('tabnic', copyIndex(1)))]"
-            }
-          ]
-        }
-      }
-      // add jumpbox CSE
     }
   ],
   "outputs": {
