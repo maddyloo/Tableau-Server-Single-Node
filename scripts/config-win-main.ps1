@@ -73,14 +73,14 @@ $config = @{
 $config | ConvertTo-Json -depth 20 | Out-File "C:\tab\cf.json" -Encoding ASCII
 
 ## 4. Download scripted installer .py (refers to Tableau's github page)
-Invoke-WebRequest -Uri $install_script_url -OutFile "C:\tab\SI.py"
+Invoke-WebRequest -Uri $install_script_url -OutFile "C:\tab\SI.py" -UseBasicParsing
 
 ## 5. Download python .exe
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "C:\tab\python-3.7.0.exe"
+Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe" -OutFile "C:\tab\python-3.7.0.exe" -UseBasicParsing
 
 ## 6. Download Tableau Server 2019.4 .exe
-Invoke-WebRequest -Uri "https://downloads.tableau.com/esdalt/2019.4.1/TableauServer-64bit-2019-4-1.exe" -Outfile "C:\tab\ts.exe"
+Invoke-WebRequest -Uri "https://downloads.tableau.com/esdalt/2019.4.1/TableauServer-64bit-2019-4-1.exe" -Outfile "C:\tab\ts.exe" -UseBasicParsing
 
 ### COMMANDS
 
