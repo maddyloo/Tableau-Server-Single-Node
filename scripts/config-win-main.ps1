@@ -30,11 +30,11 @@ Set-Location "C:\"
 mkdir tab
 
 $secrets = @{
-    local_admin_user="$local_admin_user"
-    local_admin_pass="$local_admin_pass"
-    content_admin_user="$ts_admin_un"
-    content_admin_pass="$ts_admin_pw"
-    product_keys=@("$license_key")
+    local_admin_user = $local_admin_user
+    local_admin_pass = $local_admin_pass
+    content_admin_user = $ts_admin_un
+    content_admin_pass = $ts_admin_pw
+    product_keys = @($license_key)
 }
 
 $secrets | ConvertTo-Json -depth 10 | Out-File "C:\tab\sc.json" -Encoding ASCII
@@ -42,18 +42,18 @@ $secrets | ConvertTo-Json -depth 10 | Out-File "C:\tab\sc.json" -Encoding ASCII
 ## 2. make registration.json
 #TODO: add parameter for accepting eula
 $registration = @{
-    first_name = "$reg_first_name"
-    last_name = "$reg_last_name"
-    email = "$reg_email"
-    company = "$reg_company"
-    title = "$reg_title"
-    department = "$reg_department"
-    industry = "$reg_industry"
-    phone = "$reg_phone"
-    city = "$reg_city"
-    state = "$reg_state"
-    zip = "$reg_zip"
-    country = "$reg_country"
+    first_name = $reg_first_name
+    last_name = $reg_last_name
+    email = $reg_email
+    company = $reg_company
+    title = $reg_title
+    department = $reg_department
+    industry = $reg_industry
+    phone = $reg_phone
+    city = $reg_city
+    state = $reg_state
+    zip = $reg_zip
+    country = $reg_country
     eula = "yes"
 }
 
