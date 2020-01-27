@@ -369,7 +369,7 @@
           "protocol" : "Tcp",
           "sourcePortRange": "*",
           "destinationPortRange": "445",
-          "sourceAddressPrefix": "[resourceId('Microsoft.Network/publicIPAddresses','tabpip1')]",
+          "sourceAddressPrefix": "[resourceId('Microsoft.Network/publicIPAddresses','tabpip1').properties['ipAddress']]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
           "priority": 102,
