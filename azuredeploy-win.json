@@ -200,6 +200,7 @@
       }
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
+    "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPName'))]",
     // "LinuxExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -g ''', variables('installscripturi'), ''' -y ''', parameters('license_key'), ''' -f ''', parameters('OS'), ''' -w ''', parameters('registration_first_name'), '''')]",
     // "LiCmdWrapper": "[concat('bash ./config-linux.sh ', variables('LinuxExecute'))]",
     "WinMainExecute" : "[concat('-local_admin_user ''', parameters('adminUsername'), ''' -local_admin_pass ''', parameters('adminPassword'), ''' -ts_admin_un ''', parameters('tableau_admin_username'), ''' -ts_admin_pass ''', parameters('tableau_admin_password'), ''' -reg_zip ''', parameters('registration_zip'), ''' -reg_country ''', parameters('registration_country'), ''' -reg_city ''', parameters('registration_city'), ''' -reg_last_name ''', parameters('registration_last_name'), ''' -reg_industry ''', parameters('registration_industry'), ''' -eula yes -reg_title ''', parameters('registration_title'),''' -reg_phone ''', parameters('registration_phone'),''' -reg_company ''', parameters('registration_company'), ''' -reg_state ''', parameters('registration_state'), ''' -reg_email ''', parameters('registration_email'), ''' -reg_department ''', parameters('registration_department'), ''' -install_script_url ''', variables('wininstallscripturi'), ''' -license_key ''', parameters('license_key'), ''' -reg_first_name ''', parameters('registration_first_name'), '''')]",
@@ -614,7 +615,7 @@
     },
     "ipaddress": {
             "type": "String",
-            "value": "[reference(variables('publicIpName')).ipAddress]"
+            "value": "[variables('publicIPRef')]"
         }
   }
 }
