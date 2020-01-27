@@ -168,6 +168,7 @@
     "numberOfInstances": 1,
     // "linuxscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-win-main.ps1', parameters('_artifactsLocationSasToken')))]",
     "winmainscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-win-main.ps1', parameters('_artifactsLocationSasToken')))]",
+    "winjumpscripturi" : "[uri(parameters('_artifactsLocation'), concat('scripts/config-win-jump.ps1', parameters('_artifactsLocationSasToken')))]",
     // "lininstallscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
     "wininstallscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/SilentInstaller.py', parameters('_artifactsLocationSasToken')))]",
     "virtualMachineSize": "[parameters('VMSize')]",
@@ -202,6 +203,8 @@
     // "LiCmdWrapper": "[concat('bash ./config-linux.sh ', variables('LinuxExecute'))]",
     "WinMainExecute" : "[concat('-local_admin_user ''', parameters('adminUsername'), ''' -local_admin_pass ''', parameters('adminPassword'), ''' -ts_admin_un ''', parameters('tableau_admin_username'), ''' -ts_admin_pass ''', parameters('tableau_admin_password'), ''' -reg_zip ''', parameters('registration_zip'), ''' -reg_country ''', parameters('registration_country'), ''' -reg_city ''', parameters('registration_city'), ''' -reg_last_name ''', parameters('registration_last_name'), ''' -reg_industry ''', parameters('registration_industry'), ''' -eula yes -reg_title ''', parameters('registration_title'),''' -reg_phone ''', parameters('registration_phone'),''' -reg_company ''', parameters('registration_company'), ''' -reg_state ''', parameters('registration_state'), ''' -reg_email ''', parameters('registration_email'), ''' -reg_department ''', parameters('registration_department'), ''' -install_script_url ''', variables('wininstallscripturi'), ''' -license_key ''', parameters('license_key'), ''' -reg_first_name ''', parameters('registration_first_name'), '''')]",
     "WinMainWrapper" : "[concat('powershell -ExecutionPolicy Bypass -File config-win-main.ps1 ', variables('WinMainExecute'))]",
+    //"WinJumpExecute" : 
+    //"WinJumpWrapper" : "[concat('', variables('WinJumpExecute'))]",
     "LinuxsecurityRules": [
       {
         "name": "ssh-rule",
@@ -289,18 +292,6 @@
       }
     },
     {
-      "apiVersion": "2019-04-01",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('NSGName')]",
-      "location": "[parameters('location')]",
-      "tags": {
-        "displayName": "[variables('NSGName')]"
-      },
-      "properties": {
-        "securityRules": "[variables('LinuxsecurityRules')]"
-      }
-    },
-    {
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[concat('tabpip', copyindex(1))]",
       "apiVersion": "2019-04-01",
@@ -317,6 +308,75 @@
         "dnsSettings": {
           "domainNameLabel": "[concat('a', variables('publicIpName'), copyIndex(1))]"
         }
+      }
+    },
+    {
+      "apiVersion": "2019-04-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('NSGName')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "[variables('NSGName')]"
+      },
+      "properties": {
+        "securityRules": [
+      {
+        "name": "rdp-rule",
+        "properties": {
+          "description": "Allow SSH",
+          "protocol": "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "3389",
+          "sourceAddressPrefix": "[parameters('source_CIDR')]",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 100,
+          "direction": "Inbound"
+        }
+      },
+      {
+        "name": "mngagent-rule",
+        "properties": {
+          "description": "Allow Management",
+          "protocol": "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "8850",
+          "sourceAddressPrefix": "[parameters('source_CIDR')]",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 101,
+          "direction": "Inbound"
+        }
+      },
+      {
+        "name": "web-rule",
+        "properties": {
+          "description": "Allow WEB",
+          "protocol": "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "80",
+          "sourceAddressPrefix": "Internet",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 102,
+          "direction": "Inbound"
+        }
+      },
+      {
+        "name" : "psexec-port",
+        "properties" : {
+          "description" : "allow PsExec",
+          "protocol" : "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "445",
+          "sourceAddressPrefix": "[resourceId('Microsoft.Network/publicIPAddresses','tabpip1')]",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 102,
+          "direction": "Inbound"
+        }
+      }
+    ]
       }
     },
     {
@@ -425,6 +485,89 @@
             },
             "protectedSettings": {
               "commandToExecute": "[variables('WinMainWrapper')]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat('tableau-jumpbox', copyIndex(1))]",
+      "apiVersion": "2019-07-01",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[variables('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "nicLoop"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_D2s_v3"
+        },
+        "osProfile": {
+          "computerName": "[concat('tableau-jumpbox', copyIndex(1))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": "[variables('imageReference')[parameters('OS')]]",
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          //might be able to take this out
+          "copy": [
+            {
+              "name": "dataDisks",
+              "count": 1,
+              "input": {
+                "diskSizeGB": 64,
+                "lun": "[copyIndex('dataDisks')]",
+                "createOption": "Empty"
+              }
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('tabnic', copyIndex(1)))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "condition": "[equals(parameters('accept_eula'), 'Yes')]",
+          "name": "[concat('tableau-jumpbox', copyIndex(1),'/CustomScript')]",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          // "type": "extensions",
+          "location": "[parameters('location')]",
+          "apiVersion": "2019-07-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jumpbox', copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "appdeploy"
+          },
+          "properties": {
+            //this is different for windows & linux
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.10",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "skipDos2Unix": false,
+              "timestamp": 123456789,
+              "fileUris": [
+                "[variables('winjumpscripturi')]"
+              ]
+            },
+            "protectedSettings": {
+              // resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Bypass -File config-win-jump.ps1 -ts_main_ip ''', resourceId('Microsoft.Network/publicIPAddresses','tabpip1'), ''' -local_admin_user ''', parameters('adminUsername'), ''' -local_admin_pass ''', parameters('adminPassword'))]"
             }
           }
         }
