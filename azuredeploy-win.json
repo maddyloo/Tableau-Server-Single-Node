@@ -494,7 +494,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('tableau-jumpbox', copyIndex(1))]",
+      "name": "[concat('tableau-jump', copyIndex(1))]",
       "apiVersion": "2019-07-01",
       "location": "[parameters('location')]",
       "copy": {
@@ -509,7 +509,7 @@
           "vmSize": "Standard_D2s_v3"
         },
         "osProfile": {
-          "computerName": "[concat('tableau-jumpbox', copyIndex(1))]",
+          "computerName": "[concat('tableau-jump', copyIndex(1))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -543,13 +543,13 @@
       "resources": [
         {
           "condition": "[equals(parameters('accept_eula'), 'Yes')]",
-          "name": "[concat('tableau-jumpbox', copyIndex(1),'/CustomScript')]",
+          "name": "[concat('tableau-jump', copyIndex(1),'/CustomScript')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           // "type": "extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2019-07-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jumpbox', copyIndex(1)))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jump', copyIndex(1)))]"
           ],
           "tags": {
             "displayName": "appdeploy"
