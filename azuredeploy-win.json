@@ -161,6 +161,7 @@
   "variables": {
     "virtualNetworkName": "TABVNET",
     "NSGName": "TABNSG",
+    //ok we're giving the Ip address a name!
     "publicIPAddressType": "Dynamic",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
@@ -369,7 +370,8 @@
           "protocol" : "Tcp",
           "sourcePortRange": "*",
           "destinationPortRange": "445",
-          "sourceAddressPrefix": "[resourceId('Microsoft.Network/publicIPAddresses','tabpip1').IpAddress]",
+          // resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))).IpAddress
+          "sourceAddressPrefix": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPName')).IpAddress]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
           "priority": 102,
