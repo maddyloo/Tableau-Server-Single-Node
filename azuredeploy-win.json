@@ -370,8 +370,8 @@
           "protocol" : "Tcp",
           "sourcePortRange": "*",
           "destinationPortRange": "445",
-          // resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))).IpAddress
-          "sourceAddressPrefix": "*",
+          // need to limit this to just the ip for the jumpbox
+          "sourceAddressPrefix": "Internet",
           "destinationAddressPrefix": "*",
           "access": "Allow",
           "priority": 102,
