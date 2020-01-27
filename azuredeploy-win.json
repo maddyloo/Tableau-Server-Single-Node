@@ -371,7 +371,7 @@
           "sourcePortRange": "*",
           "destinationPortRange": "445",
           // resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))).IpAddress
-          "sourceAddressPrefix": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPName')).IpAddress]",
+          "sourceAddressPrefix": "*",
           "destinationAddressPrefix": "*",
           "access": "Allow",
           "priority": 102,
