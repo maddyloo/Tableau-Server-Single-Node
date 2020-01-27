@@ -615,7 +615,8 @@
     },
     "ipaddress": {
         "type": "string",
-        "value": "[reference(variables('publicIpName')).ipAddress]"
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses/', 'tabpip1')).ipAddress]"
+        // "[resourceId('Microsoft.Network/publicIPAddresses/', concat('tabpip', copyIndex(1)))]"
         // "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('ipAddressName')), '2016-03-30').dnsSettings.fqdn]",
     }
   }
