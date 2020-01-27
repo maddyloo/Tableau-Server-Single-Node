@@ -8,7 +8,7 @@ Param(
 )
 
 # 1. download PsTools.zip
-Invoke-WebRequest -Uri "https://download.sysinternals.com/files/PSTools.zip" -OutFile "C:\PSTools.zip"
+Invoke-WebRequest -Uri "https://download.sysinternals.com/files/PSTools.zip" -OutFile "C:\PSTools.zip" -UseBasicParsing
 
 # 2. Unzip PSTools.zip
 Expand-Archive -LiteralPath "C:\PSTools.zip" -Destination "C:\PSTools\"

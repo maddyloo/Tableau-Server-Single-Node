@@ -162,7 +162,7 @@
     "virtualNetworkName": "TABVNET",
     "NSGName": "TABNSG",
     //ok we're giving the Ip address a name!
-    "publicIPAddressType": "Dynamic",
+    "publicIPAddressType": "Static",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
@@ -483,40 +483,40 @@
             }
           ]
         }
-      },
-      "resources": [
-        {
-          "condition": "[equals(parameters('accept_eula'), 'Yes')]",
-          "name": "[concat('tableau-main', copyIndex(1),'/CustomScript')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          // "type": "extensions",
-          "location": "[parameters('location')]",
-          "apiVersion": "2019-07-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)))]"
-          ],
-          "tags": {
-            "displayName": "appdeploy"
-          },
-          "properties": {
-            //this is different for windows & linux
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.10",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "skipDos2Unix": false,
-              "timestamp": 123456789,
-              "fileUris": [
-                "[variables('winmainscripturi')]"
-              ]
-            },
-            "protectedSettings": {
-              "commandToExecute": "[variables('WinMainWrapper')]"
-            }
-          }
-        }
-      ]
+      }
+      // "resources": [
+      //   {
+      //     "condition": "[equals(parameters('accept_eula'), 'Yes')]",
+      //     "name": "[concat('tableau-main', copyIndex(1),'/CustomScript')]",
+      //     "type": "Microsoft.Compute/virtualMachines/extensions",
+      //     // "type": "extensions",
+      //     "location": "[parameters('location')]",
+      //     "apiVersion": "2019-07-01",
+      //     "dependsOn": [
+      //       "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)))]"
+      //     ],
+      //     "tags": {
+      //       "displayName": "appdeploy"
+      //     },
+      //     "properties": {
+      //       //this is different for windows & linux
+      //       "publisher": "Microsoft.Compute",
+      //       "type": "CustomScriptExtension",
+      //       "typeHandlerVersion": "1.10",
+      //       "autoUpgradeMinorVersion": true,
+      //       "settings": {
+      //         "skipDos2Unix": false,
+      //         "timestamp": 123456789,
+      //         "fileUris": [
+      //           "[variables('winmainscripturi')]"
+      //         ]
+      //       },
+      //       "protectedSettings": {
+      //         "commandToExecute": "[variables('WinMainWrapper')]"
+      //       }
+      //     }
+      //   }
+      // ]
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
@@ -565,42 +565,42 @@
             }
           ]
         }
-      },
-      "resources": [
-        {
-          "condition": "[equals(parameters('accept_eula'), 'Yes')]",
-          "name": "[concat('tableau-jump', copyIndex(1),'/CustomScript')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          // "type": "extensions",
-          "location": "[parameters('location')]",
-          "apiVersion": "2019-07-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jump', copyIndex(1)))]",
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)))]"
-          ],
-          "tags": {
-            "displayName": "appdeploy"
-          },
-          "properties": {
-            //this is different for windows & linux
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.10",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "skipDos2Unix": false,
-              "timestamp": 123456789,
-              "fileUris": [
-                "[variables('winjumpscripturi')]"
-              ]
-            },
-            "protectedSettings": {
-              // resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Bypass -File config-win-jump.ps1 -ts_main_ip ''', resourceId('Microsoft.Network/publicIPAddresses','tabpip1'), ''' -local_admin_user ''', parameters('adminUsername'), ''' -local_admin_pass ''', parameters('adminPassword'))]"
-            }
-          }
-        }
-      ]
+      }
+      // "resources": [
+      //   {
+      //     "condition": "[equals(parameters('accept_eula'), 'Yes')]",
+      //     "name": "[concat('tableau-jump', copyIndex(1),'/CustomScript')]",
+      //     "type": "Microsoft.Compute/virtualMachines/extensions",
+      //     // "type": "extensions",
+      //     "location": "[parameters('location')]",
+      //     "apiVersion": "2019-07-01",
+      //     "dependsOn": [
+      //       "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jump', copyIndex(1)))]",
+      //       "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)))]"
+      //     ],
+      //     "tags": {
+      //       "displayName": "appdeploy"
+      //     },
+      //     "properties": {
+      //       //this is different for windows & linux
+      //       "publisher": "Microsoft.Compute",
+      //       "type": "CustomScriptExtension",
+      //       "typeHandlerVersion": "1.10",
+      //       "autoUpgradeMinorVersion": true,
+      //       "settings": {
+      //         "skipDos2Unix": false,
+      //         "timestamp": 123456789,
+      //         "fileUris": [
+      //           "[variables('winjumpscripturi')]"
+      //         ]
+      //       },
+      //       "protectedSettings": {
+      //         // resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))
+      //         "commandToExecute": "[concat('powershell -ExecutionPolicy Bypass -File config-win-jump.ps1 -ts_main_ip ''', resourceId('Microsoft.Network/publicIPAddresses','tabpip1'), ''' -local_admin_user ''', parameters('adminUsername'), ''' -local_admin_pass ''', parameters('adminPassword'))]"
+      //       }
+      //     }
+      //   }
+      // ]
     }
   ],
   "outputs": {
@@ -611,6 +611,10 @@
     "winmainscripturi" : {
       "type" : "string",
       "value" : "[variables('winmainscripturi')]"
-    }
+    },
+    "ipaddress": {
+            "type": "String",
+            "value": "[reference(variables('publicIpName')).ipAddress]"
+        }
   }
 }
