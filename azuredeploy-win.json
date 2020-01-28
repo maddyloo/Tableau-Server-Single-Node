@@ -576,6 +576,8 @@
           "location": "[parameters('location')]",
           "apiVersion": "2019-07-01",
           "dependsOn": [
+            // eep - has to depend on the main script
+            "[resourceId('Microsoft.Compute/virtualMachines/tableau-main1/extensions/', 'CustomScript')]",
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jump', copyIndex(1)))]",
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)))]"
           ],
