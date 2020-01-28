@@ -92,3 +92,4 @@ New-NetFirewallRule -DisplayName "TSM Inbound" -Direction Inbound -Action Allow 
 New-NetFirewallRule -DisplayName "Tableau Server Inbound" -Direction Inbound -Action Allow -LocalPort 80 -Protocol TCP
 
 ## 3. Start SMB/file share on c drive
+New-SMBShare -Name "psexec" -Path "C:\" -FullAccess $local_admin_user
