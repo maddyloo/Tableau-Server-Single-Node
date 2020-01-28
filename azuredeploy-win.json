@@ -579,7 +579,8 @@
             // eep - has to depend on the main script
             // "[resourceId('Microsoft.Compute/virtualMachines/tableau-main1/extensions/CustomScript')]",
             //doesnt work:  "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'tab-main1', 'CustomScript')]",
-            "[extensionResourceId('Microsoft.Compute/virtualMachines', 'tableau-main1', 'CustomScript')]",
+            // doesnt work: "[extensionResourceId('Microsoft.Compute/virtualMachines', 'tableau-main1', 'CustomScript')]",
+            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)), 'extensions/CustomScript')]",
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-jump', copyIndex(1)))]",
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau-main', copyIndex(1)))]"
           ],
