@@ -611,19 +611,21 @@
     }
   ],
   "outputs": {
-    "Command": {
-      "type": "string",
-      "value": "[variables('WinMainWrapper')]"
-    },
+    // "Command": {
+    //   "type": "string",
+    //   "value": "[variables('WinMainWrapper')]"
+    // },
     "winmainscripturi" : {
       "type" : "string",
       "value" : "[variables('winmainscripturi')]"
     },
+    "wininstallscripturi" : {
+      "type" : "string",
+      "value" : "[variables('wininstallscripturi')]"
+    },
     "ipaddress": {
-        "type": "string",
-        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses/', 'tabpip1')).ipAddress]"
-        // "[resourceId('Microsoft.Network/publicIPAddresses/', concat('tabpip', copyIndex(1)))]"
-        // "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('ipAddressName')), '2016-03-30').dnsSettings.fqdn]",
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses/', 'tabpip1')).ipAddress]"
     }
   }
 }
