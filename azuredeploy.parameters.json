@@ -1,66 +1,66 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-"parameters": {
-  "OS": {
-    "value": "Ubuntu 16.04 LTS"
-  },
-  "adminUsername": {
-    "value": "locadmin"
-  },
-  "tableau_admin_username": {
-    "value": "admin"
-  },
-  "adminPassword": {
-    "value": "P@ssword12345$"
-  },
-  "tableau_admin_password": {
-    "value": "P@ssword12345$"
-  },
-  "registration_first_name": {
-    "value": "jamie"
-  },
-  "registration_last_name": {
-    "value": "data"
-  },
-  "registration_email": {
-    "value": "jdata@tableau.com"
-  },
-  "registration_company": {
-    "value": "tableau"
-  },
-  "registration_title": {
-    "value": "PM"
-  },
-  "registration_department": {
-    "value": "Dev"
-  },
-  "registration_industry": {
-    "value": "tech"
-  },
-  "registration_phone": {
-    "value": "8888888"
-  },
-  "registration_city": {
-    "value": "Seattle"
-  },
-  "registration_state": {
-    "value": "WA"
-  },
-  "registration_zip": {
-    "value": "98107"
-  },
-  "registration_country": {
-    "value": "USA"
-  },
-  "source_CIDR": {
-    "value": "0.0.0.0/0"
-  },
-  "accept_eula": {
-    "value": "Yes"
-  },
-  "VMSize": {
-    "value": "Standard_D16s_v3"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "OS": {
+      "value": "RHEL 7.6"
+    },
+    "adminUsername": {
+      "value": "mcorneli"
+    },
+    "tableau_admin_username": {
+      "value": "admin"
+    },
+    "adminPassword": {
+      "value": "MasterUser1!"
+    },
+    "tableau_admin_password": {
+      "value": "admin"
+    },
+    "registration_first_name": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_last_name": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_email": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_company": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_title": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_department": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_industry": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_phone": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_city": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_state": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_zip": {
+      "value": "GEN-UNIQUE"
+    },
+    "registration_country": {
+      "value": "GEN-UNIQUE"
+    },
+    "source_CIDR": {
+      "value": "0.0.0.0/0"
+    },
+    "accept_eula": {
+      "value": "Yes"
+    },
+    "VMSize": {
+      "value": "Standard_D16s_v3"
+    }
   }
-}
 }

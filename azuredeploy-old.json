@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "_artifactsLocation": {
@@ -27,7 +27,7 @@
       "type": "string",
       "allowedValues": ["Ubuntu 16.04 LTS", "CentOS 7.5", "RHEL 7.6"],
       "metadata": {
-        "description": "The operating system of the VM."
+        "description": "The operating system of the VM.  Ubuntu 16 or Red Hat 7."
       }
     },
     "VMSize": {
@@ -418,5 +418,11 @@
         }
       ]
     }
-  ]
+  ],
+  "outputs": {
+    "linuxCommand": {
+      "type": "string",
+      "value": "[variables('LiCmdWrapper')]"
+    }
+  }
 }

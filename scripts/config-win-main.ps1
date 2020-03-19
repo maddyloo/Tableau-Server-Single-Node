@@ -93,3 +93,5 @@ New-NetFirewallRule -DisplayName "Tableau Server Inbound" -Direction Inbound -Ac
 
 ## 3. Start SMB/file share on c drive
 New-SMBShare -Name "psexec" -Path "C:\" -FullAccess "locadmin"
+## try this: New-SMBShare -Name psexec -Path C:\ -FullAccess locadmin
+## try this: New-SMBShare -Name psexec -Path C: -FullAccess locadmin
