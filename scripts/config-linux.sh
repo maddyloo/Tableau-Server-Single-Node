@@ -8,8 +8,7 @@ while getopts u:p:f:g:h:i:j:k:l:m:n:o:q:r:s:t:v:w:x:y: option
 do
  case "${option}"
  in
- u) USER=${OPTARG};;
- p) PASSWORD=${OPTARG};;
+ e) VERSION=${OPTARG};;
  f) OS=${OPTARG};;
  g) INSTALL_SCRIPT_URL=${OPTARG};;
  h) TS_USER=${OPTARG};;
@@ -20,10 +19,12 @@ do
  m) LAST_NAME=${OPTARG};;
  n) INDUSTRY=${OPTARG};;
  o) EULA=${OPTARG};;
+ p) PASSWORD=${OPTARG};;
  q) TITLE=${OPTARG};;
  r) PHONE=${OPTARG};;
  s) COMPANY=${OPTARG};;
  t) STATE=${OPTARG};;
+ u) USER=${OPTARG};;
  v) DEPARMENT=${OPTARG};;
  w) FIRST_NAME=${OPTARG};;
  x) EMAIL=${OPTARG};;
@@ -35,7 +36,6 @@ cd /tmp/
 
 # create secrets
 printf "tsm_admin_user=\"$USER\"\ntsm_admin_pass=\"$PASSWORD\"\ntableau_server_admin_user=\"$TS_USER\"\ntableau_server_admin_pass=\"$TS_PASS\"" >> secrets
-# echo "tsm_admin_user=\"$USER\"\ntsm_admin_pass=\"$PASSWORD\"\ntableau_server_admin_user=\"$TS_USER\"\ntableau_server_admin_pass=\"$TS_PASS\"" >> secrets
 
 # create registration file
 echo "{
@@ -65,14 +65,15 @@ echo '{
 }' >> config.json
 wait
 
-# download tableau server .deb or.rpm file
-# retry on fail
-# version: 2019.3.1
+# assemble download URI
+hyphen=`echo $VERSION | tr '.' '-'`
+
+# download tableau server .deb or.rpm file & retry on fail
 if [ "$OS" == "Ubuntu 16.04 LTS" ]
 then
-  wget --tries=3 --output-document=tableau-installer.deb https://downloads.tableau.com/esdalt/2020.1.1/tableau-server-2020-1-1_amd64.deb
+  wget --tries=3 --output-document=tableau-installer.deb "https://downloads.tableau.com/esdalt/${VERSION}/tableau-server-${hyphen}_amd64.deb"
 else
-  wget --tries=3 --output-document=tableau-installer.rpm https://downloads.tableau.com/esdalt/2020.1.1/tableau-server-2020-1-1.x86_64.rpm
+  wget --tries=3 --output-document=tableau-installer.rpm "https://downloads.tableau.com/esdalt/${VERSION}/tableau-server-${hyphen}.x86_64.rpm"
 fi
 
 if [ $? -ne 0 ]
