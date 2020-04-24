@@ -499,12 +499,11 @@
             "typeHandlerVersion": "1.7",
             "autoUpgradeMinorVersion": true,
             "settings": {
-             "fileUris": "[split(variables('fileUris'), ' ')]"
+             "fileUris": "[variables('winscripturi')]"
               
             },
             "protectedSettings": {
-              "commandToExecute": "[variables('WinMainWrapper')]"
-              
+              "commandToExecute": "[variables('WinCmdWrapper')]"
             }
           }
         }
