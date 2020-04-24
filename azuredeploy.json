@@ -25,7 +25,7 @@
     },
     "OS": {
       "type": "string",
-      "allowedValues": ["Ubuntu 16.04 LTS", "CentOS 7.5", "RHEL 7.6"],
+      "allowedValues": ["Ubuntu 16.04 LTS", "CentOS 7.5", "RHEL 7.6", "Windows 2016-Datacenter"],
       "metadata": {
         "description": "The operating system of the VM."
       }
@@ -175,6 +175,10 @@
     "numberOfInstances": 1,
     "linuxscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-linux.sh', parameters('_artifactsLocationSasToken')))]",
     "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
+    // "scripthome": "https://raw.githubusercontent.com/AndrijaMa/TestX/master/AzureRM-Deploy/",
+    "winscriptfile":"config-win.ps1",
+    // "fileUris": "[concat(variables('scripthome'), variables('scriptfile'))]",
+    "winscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-win.ps1', parameters('_artifactsLocationSasToken')))]",
     "virtualMachineSize": "[parameters('VMSize')]",
     "imageReference": {
       "Ubuntu 16.04 LTS": {
@@ -194,11 +198,17 @@
         "offer": "RHEL",
         "sku": "7-RAW",
         "version": "latest"
+      },
+      "Windows 2016-Datacenter": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2016-Datacenter",
+        "version": "latest"
       }
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
     "LinuxExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -e ''', parameters('tableau_version'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -g ''', variables('installscripturi'), ''' -y ''', parameters('license_key'), ''' -f ''', parameters('OS'), ''' -w ''', parameters('registration_first_name'), '''')]",
-    "LiCmdWrapper": "[concat('bash ./config-linux.sh ', variables('LinuxExecute'))]",
+    "LinCmdWrapper": "[concat('bash ./config-linux.sh ', variables('LinuxExecute'))]",
     "LinuxsecurityRules": [
       {
         "name": "ssh-rule",
@@ -210,7 +220,7 @@
           "sourceAddressPrefix": "[parameters('source_CIDR')]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
-          "priority": 100,
+          "priority": 10,
           "direction": "Inbound"
         }
       },
@@ -224,7 +234,7 @@
           "sourceAddressPrefix": "[parameters('source_CIDR')]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
-          "priority": 101,
+          "priority": 20,
           "direction": "Inbound"
         }
       },
@@ -238,7 +248,53 @@
           "sourceAddressPrefix": "Internet",
           "destinationAddressPrefix": "*",
           "access": "Allow",
-          "priority": 102,
+          "priority": 30,
+          "direction": "Inbound"
+        }
+      }
+    ],
+    "WinExecute" : "[concat('-local_admin_user ', parameters('adminUsername'), ' -local_admin_pass ', parameters('adminPassword'), ' -ts_admin_un ', parameters('adminUsername'), ' -ts_admin_pass ', parameters('adminPassword'), ' -reg_zip ', parameters('registration_zip'), ' -reg_country ', parameters('registration_country'), ' -reg_city ', parameters('registration_city'), ' -reg_last_name ', parameters('registration_last_name'), ' -reg_industry ', parameters('registration_industry'), ' -eula ', parameters('accept_eula') ,' -reg_title ', parameters('registration_title'),' -reg_phone ', parameters('registration_phone'),' -reg_company ', parameters('registration_company'), ' -reg_state ', parameters('registration_state'), ' -reg_email ', parameters('registration_email'), ' -reg_department ', parameters('registration_department'), ' -install_script_url ', variables('winscripturi'), ' -license_key ', parameters('license_key'), ' -reg_first_name ', parameters('registration_first_name'), ' -ts_build ', parameters('tableau_version'), '')]",
+    "WinCmdWrapper" : "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('winscriptfile'), ' ', variables('WinExecute'))]",
+    "WindowssecurityRules": [
+      {
+        "name": "ssh-rule",
+        "properties": {
+          "description": "Allow RDP",
+          "protocol": "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "3389",
+          "sourceAddressPrefix": "Internet",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 100,
+          "direction": "Inbound"
+        }
+      },
+      {
+        "name": "mngagent-rule",
+        "properties": {
+          "description": "Allow Management",
+          "protocol": "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "8850",
+          "sourceAddressPrefix": "Internet",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 110,
+          "direction": "Inbound"
+        }
+      },
+      {
+        "name": "web-rule",
+        "properties": {
+          "description": "Allow WEB",
+          "protocol": "Tcp",
+          "sourcePortRange": "*",
+          "destinationPortRange": "80",
+          "sourceAddressPrefix": "Internet",
+          "destinationAddressPrefix": "*",
+          "access": "Allow",
+          "priority": 120,
           "direction": "Inbound"
         }
       }
@@ -294,7 +350,8 @@
         "displayName": "[variables('NSGName')]"
       },
       "properties": {
-        "securityRules": "[variables('LinuxsecurityRules')]"
+        // "securityRules": "[variables('LinuxsecurityRules')]"
+        "securityRules": "[if(equals(parameters('OS'),'Windows 2016-Datacenter'),variables('LinuxsecurityRules'),variables('WindowssecurityRules'))]"
       }
     },
     {
@@ -416,9 +473,12 @@
               "timestamp": 123456789
             },
             "protectedSettings": {
-              "commandToExecute": "[variables('LiCmdWrapper')]",
+              "commandToExecute": 
+                // "[variables('LinCmdWrapper')]",
+                "[if(equals(parameters('OS'),'Windows 2016-Datacenter'),variables('WinCmdWrapper'),variables('LinCmdWrapper'))]",
               "fileUris": [
-                "[variables('linuxscripturi')]"
+                // "[variables('linuxscripturi')]"
+                "[if(equals(parameters('OS'),'Windows 2016-Datacenter'), variables('winscripturi'),variables('linuxscripturi'))]"
               ]
             }
           }
