@@ -452,7 +452,7 @@
       },
       "resources": [
         {
-          "condition": "[equals(parameters('accept_eula'), 'Yes')]",
+          "condition": "[and(equals(parameters('accept_eula'), 'Yes'),equals(parameters('OS'),'Ubuntu 16.04 LTS'))]",
           "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[parameters('location')]",
@@ -474,12 +474,37 @@
             },
             "protectedSettings": {
               "commandToExecute": 
-                // "[variables('LinCmdWrapper')]",
-                "[if(equals(parameters('OS'),'Windows 2016-Datacenter'),variables('WinCmdWrapper'),variables('LinCmdWrapper'))]",
+                "[variables('LinCmdWrapper')]",
               "fileUris": [
-                // "[variables('linuxscripturi')]"
-                "[if(equals(parameters('OS'),'Windows 2016-Datacenter'), variables('winscripturi'),variables('linuxscripturi'))]"
+                "[variables('linuxscripturi')]"
               ]
+            }
+          }
+        },
+        {
+          "condition": "[and(equals(parameters('accept_eula'), 'Yes'),equals(parameters('OS'),'Windows 2016-Datacenter'))]",
+          "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "location": "[parameters('location')]",
+         "apiVersion": "2018-06-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
+          ],
+          "tags": {
+            "displayName": "windowsappdeploy"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.7",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+             "fileUris": "[split(variables('fileUris'), ' ')]"
+              
+            },
+            "protectedSettings": {
+              "commandToExecute": "[variables('WinMainWrapper')]"
+              
             }
           }
         }

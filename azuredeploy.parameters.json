@@ -6,7 +6,7 @@
       "value": "2020.1.2"
     },
     "OS": {
-      "value": "Ubuntu 16.04 LTS"
+      "value": "Windows 2016-Datacenter"
     },
     "adminUsername": {
       "value": "mcorneli"
