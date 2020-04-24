@@ -298,7 +298,36 @@
           "direction": "Inbound"
         }
       }
-    ]
+    ],
+    "win_CSE_properties": {
+      "publisher": "Microsoft.Compute",
+      "type": "CustomScriptExtension",
+      "typeHandlerVersion": "1.7",
+      "autoUpgradeMinorVersion": true,
+      "settings": {
+        "fileUris": "[variables('winscripturi')]"
+        },
+      "protectedSettings": {
+        "commandToExecute": "[variables('WinCmdWrapper')]"
+      }
+    },
+    "lin_CSE_properties": {
+      "publisher": "Microsoft.Azure.Extensions",
+      "type": "CustomScript",
+      "typeHandlerVersion": "2.0",
+      "autoUpgradeMinorVersion": true,
+      "settings": {
+        "skipDos2Unix": false,
+        "timestamp": 123456789
+      },
+        "protectedSettings": {
+        "commandToExecute": 
+          "[variables('LinCmdWrapper')]",
+        "fileUris": [
+          "[variables('linuxscripturi')]"
+        ]
+      }
+    }
   },
   "resources": [
     {
@@ -452,60 +481,20 @@
       },
       "resources": [
         {
-          "condition": "[and(equals(parameters('accept_eula'), 'Yes'),equals(parameters('OS'),'Ubuntu 16.04 LTS'))]",
+          "condition": "[equals(parameters('accept_eula'), 'Yes')]",
           "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2019-07-01",
+          // "apiVersion": "2018-06-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
           ],
           "tags": {
-            "displayName": "linuxappdeploy"
+            "displayName": "customscriptextension"
           },
-          "properties": {
-            "publisher": "Microsoft.Azure.Extensions",
-            "type": "CustomScript",
-            "typeHandlerVersion": "2.0",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "skipDos2Unix": false,
-              "timestamp": 123456789
-            },
-            "protectedSettings": {
-              "commandToExecute": 
-                "[variables('LinCmdWrapper')]",
-              "fileUris": [
-                "[variables('linuxscripturi')]"
-              ]
-            }
-          }
-        },
-        {
-          "condition": "[and(equals(parameters('accept_eula'), 'Yes'),equals(parameters('OS'),'Windows 2016-Datacenter'))]",
-          "name": "[concat('tableau', copyIndex(1),'/CustomScript')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "location": "[parameters('location')]",
-         "apiVersion": "2018-06-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
-          ],
-          "tags": {
-            "displayName": "windowsappdeploy"
-          },
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.7",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-             "fileUris": "[variables('winscripturi')]"
-              
-            },
-            "protectedSettings": {
-              "commandToExecute": "[variables('WinCmdWrapper')]"
-            }
-          }
+          "properties":
+            "[if(equals(parameters('OS'),'Ubuntu 16.04 LTS'),variables('lin_CSE_properties'),variables('win_CSE_properties'))]"
         }
       ]
     }
