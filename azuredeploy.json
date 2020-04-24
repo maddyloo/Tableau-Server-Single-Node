@@ -173,12 +173,6 @@
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "numberOfInstances": 1,
-    "linuxscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-linux.sh', parameters('_artifactsLocationSasToken')))]",
-    "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
-    // "scripthome": "https://raw.githubusercontent.com/AndrijaMa/TestX/master/AzureRM-Deploy/",
-    "winscriptfile":"config-win.ps1",
-    // "fileUris": "[concat(variables('scripthome'), variables('scriptfile'))]",
-    "winscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-win.ps1', parameters('_artifactsLocationSasToken')))]",
     "virtualMachineSize": "[parameters('VMSize')]",
     "imageReference": {
       "Ubuntu 16.04 LTS": {
@@ -209,6 +203,44 @@
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
     "LinuxExecute": "[concat('-u ''', parameters('adminUsername'), ''' -p ''', parameters('adminPassword'), ''' -h ''', parameters('tableau_admin_username'), ''' -e ''', parameters('tableau_version'), ''' -i ''', parameters('tableau_admin_password'), ''' -j ''', parameters('registration_zip'), ''' -k ''', parameters('registration_country'), ''' -l ''', parameters('registration_city'), ''' -m ''', parameters('registration_last_name'), ''' -n ''', parameters('registration_industry'), ''' -o yes -q ''', parameters('registration_title'),''' -r ''', parameters('registration_phone'),''' -s ''', parameters('registration_company'), ''' -t ''', parameters('registration_state'), ''' -x ''', parameters('registration_email'), ''' -v ''', parameters('registration_department'), ''' -g ''', variables('installscripturi'), ''' -y ''', parameters('license_key'), ''' -f ''', parameters('OS'), ''' -w ''', parameters('registration_first_name'), '''')]",
     "LinCmdWrapper": "[concat('bash ./config-linux.sh ', variables('LinuxExecute'))]",
+    "linuxscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-linux.sh', parameters('_artifactsLocationSasToken')))]",
+    "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
+    // "scripthome": "https://raw.githubusercontent.com/AndrijaMa/TestX/master/AzureRM-Deploy/",
+    "winscriptfile":"config-win.ps1",
+    // "fileUris": "[concat(variables('scripthome'), variables('scriptfile'))]",
+    "winscripturi": "[concat(parameters('_artifactsLocation'), concat('scripts/config-win.ps1', parameters('_artifactsLocationSasToken')))]",
+    // "winscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-win.ps1', parameters('_artifactsLocationSasToken')))]",
+    "WinExecute" : "[concat('-local_admin_user ', parameters('adminUsername'), ' -local_admin_pass ', parameters('adminPassword'), ' -ts_admin_un ', parameters('adminUsername'), ' -ts_admin_pass ', parameters('adminPassword'), ' -reg_zip ', parameters('registration_zip'), ' -reg_country ', parameters('registration_country'), ' -reg_city ', parameters('registration_city'), ' -reg_last_name ', parameters('registration_last_name'), ' -reg_industry ', parameters('registration_industry'), ' -eula ', parameters('accept_eula') ,' -reg_title ', parameters('registration_title'),' -reg_phone ', parameters('registration_phone'),' -reg_company ', parameters('registration_company'), ' -reg_state ', parameters('registration_state'), ' -reg_email ', parameters('registration_email'), ' -reg_department ', parameters('registration_department'), ' -install_script_url ', variables('winscripturi'), ' -license_key ', parameters('license_key'), ' -reg_first_name ', parameters('registration_first_name'), ' -ts_build ', parameters('tableau_version'), '')]",
+    "WinCmdWrapper" : "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('winscriptfile'), ' ', variables('WinExecute'))]",
+    "win_CSE_properties": {
+      "publisher": "Microsoft.Compute",
+      "type": "CustomScriptExtension",
+      "typeHandlerVersion": "1.7",
+      "autoUpgradeMinorVersion": true,
+      "settings": {
+        "fileUris": "[split(variables('winscripturi'), ' ')]"
+        },
+      "protectedSettings": {
+        "commandToExecute": "[variables('WinCmdWrapper')]"
+      }
+    },
+    "lin_CSE_properties": {
+      "publisher": "Microsoft.Azure.Extensions",
+      "type": "CustomScript",
+      "typeHandlerVersion": "2.0",
+      "autoUpgradeMinorVersion": true,
+      "settings": {
+        "skipDos2Unix": false,
+        "timestamp": 123456789
+      },
+        "protectedSettings": {
+        "commandToExecute": 
+          "[variables('LinCmdWrapper')]",
+        "fileUris": [
+          "[variables('linuxscripturi')]"
+        ]
+      }
+    }
     "LinuxsecurityRules": [
       {
         "name": "ssh-rule",
@@ -253,8 +285,6 @@
         }
       }
     ],
-    "WinExecute" : "[concat('-local_admin_user ', parameters('adminUsername'), ' -local_admin_pass ', parameters('adminPassword'), ' -ts_admin_un ', parameters('adminUsername'), ' -ts_admin_pass ', parameters('adminPassword'), ' -reg_zip ', parameters('registration_zip'), ' -reg_country ', parameters('registration_country'), ' -reg_city ', parameters('registration_city'), ' -reg_last_name ', parameters('registration_last_name'), ' -reg_industry ', parameters('registration_industry'), ' -eula ', parameters('accept_eula') ,' -reg_title ', parameters('registration_title'),' -reg_phone ', parameters('registration_phone'),' -reg_company ', parameters('registration_company'), ' -reg_state ', parameters('registration_state'), ' -reg_email ', parameters('registration_email'), ' -reg_department ', parameters('registration_department'), ' -install_script_url ', variables('winscripturi'), ' -license_key ', parameters('license_key'), ' -reg_first_name ', parameters('registration_first_name'), ' -ts_build ', parameters('tableau_version'), '')]",
-    "WinCmdWrapper" : "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('winscriptfile'), ' ', variables('WinExecute'))]",
     "WindowssecurityRules": [
       {
         "name": "ssh-rule",
@@ -298,36 +328,7 @@
           "direction": "Inbound"
         }
       }
-    ],
-    "win_CSE_properties": {
-      "publisher": "Microsoft.Compute",
-      "type": "CustomScriptExtension",
-      "typeHandlerVersion": "1.7",
-      "autoUpgradeMinorVersion": true,
-      "settings": {
-        "fileUris": "[variables('winscripturi')]"
-        },
-      "protectedSettings": {
-        "commandToExecute": "[variables('WinCmdWrapper')]"
-      }
-    },
-    "lin_CSE_properties": {
-      "publisher": "Microsoft.Azure.Extensions",
-      "type": "CustomScript",
-      "typeHandlerVersion": "2.0",
-      "autoUpgradeMinorVersion": true,
-      "settings": {
-        "skipDos2Unix": false,
-        "timestamp": 123456789
-      },
-        "protectedSettings": {
-        "commandToExecute": 
-          "[variables('LinCmdWrapper')]",
-        "fileUris": [
-          "[variables('linuxscripturi')]"
-        ]
-      }
-    }
+    ]
   },
   "resources": [
     {
