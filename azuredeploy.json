@@ -240,7 +240,7 @@
           "[variables('linuxscripturi')]"
         ]
       }
-    }
+    },
     "LinuxsecurityRules": [
       {
         "name": "ssh-rule",
