@@ -25,7 +25,15 @@
     },
     "OS": {
       "type": "string",
-      "allowedValues": ["Ubuntu 16.04 LTS", "CentOS 7.5", "RHEL 7.6", "Windows 2016-Datacenter"],
+      "allowedValues": [
+        "Ubuntu 16.04 LTS", 
+        "CentOS 7.5", 
+        "RHEL 7.6", 
+        "Windows 2019-Datacenter",
+        "Windows 2016-Datacenter",
+        "Windows 2012-R2-Datacenter",
+        "Windows 2012-Datacenter"
+      ],
       "metadata": {
         "description": "The operating system of the VM."
       }
@@ -174,6 +182,12 @@
     "subnet1Prefix": "10.0.0.0/24",
     "numberOfInstances": 1,
     "virtualMachineSize": "[parameters('VMSize')]",
+    "linux_os": [
+      "Ubuntu 16.04 LTS", 
+      "CentOS 7.5", 
+      "RHEL 7.6"
+    ],
+    "os_is_linux": "[contains(variables('linux_os'),parameters('OS'))]", //true if linux
     "imageReference": {
       "Ubuntu 16.04 LTS": {
         "publisher": "Canonical",
@@ -198,6 +212,24 @@
         "offer": "WindowsServer",
         "sku": "2016-Datacenter",
         "version": "latest"
+      },
+      "Windows 2019-Datacenter": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2019-Datacenter",
+        "version": "latest"
+      },
+      "Windows 2012-Datacenter": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2012-Datacenter",
+        "version": "latest"
+      },
+      "Windows 2012-R2-Datacenter": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2012-R2-Datacenter",
+        "version": "latest"
       }
     },
     "publicIpName": "[substring(concat(uniqueString(resourceGroup().id, deployment().name)), 0, 6)]",
@@ -205,11 +237,8 @@
     "LinCmdWrapper": "[concat('bash ./config-linux.sh ', variables('LinuxExecute'))]",
     "linuxscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-linux.sh', parameters('_artifactsLocationSasToken')))]",
     "installscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/automated-installer', parameters('_artifactsLocationSasToken')))]",
-    // "scripthome": "https://raw.githubusercontent.com/AndrijaMa/TestX/master/AzureRM-Deploy/",
     "winscriptfile":"config-win.ps1",
-    // "fileUris": "[concat(variables('scripthome'), variables('scriptfile'))]",
     "winscripturi": "[concat(parameters('_artifactsLocation'), concat('scripts/config-win.ps1', parameters('_artifactsLocationSasToken')))]",
-    // "winscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/config-win.ps1', parameters('_artifactsLocationSasToken')))]",
     "WinExecute" : "[concat('-local_admin_user ', parameters('adminUsername'), ' -local_admin_pass ', parameters('adminPassword'), ' -ts_admin_un ', parameters('adminUsername'), ' -ts_admin_pass ', parameters('adminPassword'), ' -reg_zip ', parameters('registration_zip'), ' -reg_country ', parameters('registration_country'), ' -reg_city ', parameters('registration_city'), ' -reg_last_name ', parameters('registration_last_name'), ' -reg_industry ', parameters('registration_industry'), ' -eula ', parameters('accept_eula') ,' -reg_title ', parameters('registration_title'),' -reg_phone ', parameters('registration_phone'),' -reg_company ', parameters('registration_company'), ' -reg_state ', parameters('registration_state'), ' -reg_email ', parameters('registration_email'), ' -reg_department ', parameters('registration_department'), ' -install_script_url ', variables('winscripturi'), ' -license_key ', parameters('license_key'), ' -reg_first_name ', parameters('registration_first_name'), ' -ts_build ', parameters('tableau_version'), '')]",
     "WinCmdWrapper" : "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('winscriptfile'), ' ', variables('WinExecute'))]",
     "win_CSE_properties": {
@@ -287,7 +316,7 @@
     ],
     "WindowssecurityRules": [
       {
-        "name": "ssh-rule",
+        "name": "rdp-rule",
         "properties": {
           "description": "Allow RDP",
           "protocol": "Tcp",
@@ -381,7 +410,7 @@
       },
       "properties": {
         // "securityRules": "[variables('LinuxsecurityRules')]"
-        "securityRules": "[if(equals(parameters('OS'),'Windows 2016-Datacenter'),variables('LinuxsecurityRules'),variables('WindowssecurityRules'))]"
+        "securityRules": "[if(variables('os_is_linux'),variables('LinuxsecurityRules'),variables('WindowssecurityRules'))]"
       }
     },
     {
@@ -495,7 +524,7 @@
             "displayName": "customscriptextension"
           },
           "properties":
-            "[if(equals(parameters('OS'),'Ubuntu 16.04 LTS'),variables('lin_CSE_properties'),variables('win_CSE_properties'))]"
+            "[if(variables('os_is_linux'),variables('lin_CSE_properties'),variables('win_CSE_properties'))]"
         }
       ]
     }
