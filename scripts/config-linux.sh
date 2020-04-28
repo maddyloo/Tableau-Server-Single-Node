@@ -94,7 +94,8 @@ echo "modified automated-installer" >> installer_log.txt
 wait
 
 # run automated installer (install trial if no license key)
-if [ -z "$LICENSE_KEY" ]
+# if [ -z "$LICENSE_KEY" ]
+if [ "$LICENSE_KEY" == "trial" ]
 then
   if [ "$OS" == "Ubuntu 16.04 LTS" ]
   then

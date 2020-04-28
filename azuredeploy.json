@@ -157,9 +157,9 @@
     },
     "license_key": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "trial",
       "metadata": {
-        "description": "Enter Tableau Server License key.  ** If you would like to run a 2-week free trial please leave BLANK."
+        "description": "Enter Tableau Server License key.  ** If you would like to run a 2-week free trial please leave as 'trial'"
       }
     },
     "accept_eula": {
@@ -322,7 +322,7 @@
           "protocol": "Tcp",
           "sourcePortRange": "*",
           "destinationPortRange": "3389",
-          "sourceAddressPrefix": "Internet",
+          "sourceAddressPrefix": "[parameters('source_CIDR')]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
           "priority": 100,
@@ -336,7 +336,7 @@
           "protocol": "Tcp",
           "sourcePortRange": "*",
           "destinationPortRange": "8850",
-          "sourceAddressPrefix": "Internet",
+          "sourceAddressPrefix": "[parameters('source_CIDR')]",
           "destinationAddressPrefix": "*",
           "access": "Allow",
           "priority": 110,
