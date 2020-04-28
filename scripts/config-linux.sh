@@ -95,6 +95,7 @@ wait
 
 # run automated installer (install trial if no license key)
 # if [ -z "$LICENSE_KEY" ]
+#convert trial to lower?
 if [ "$LICENSE_KEY" == "trial" ]
 then
   if [ "$OS" == "Ubuntu 16.04 LTS" ]

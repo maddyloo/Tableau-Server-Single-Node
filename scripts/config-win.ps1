@@ -1,6 +1,6 @@
 Param(
     [string]$ts_admin_un,
-    [string]$ts_admin_pw,
+    [string]$ts_admin_pass,
     [string]$reg_first_name,
     [string]$reg_last_name,
     [string]$reg_email,
@@ -86,11 +86,12 @@ function func_Other{
         local_admin_user = $local_admin_user
         local_admin_pass = $local_admin_pass
         content_admin_user = $ts_admin_un
-        content_admin_pass = $ts_admin_pw
+        content_admin_pass = $ts_admin_pass
         product_keys = $license_key
         ts_build = $ts_build
     } | ConvertTo-Json | Out-File $other 
 
+    
     $global:ts_build = $(Get-Content -raw $other  | ConvertFrom-Json | Select-Object ts_build).ts_build
     $global:product_keys = $(Get-Content -raw $other  | ConvertFrom-Json | Select-Object product_keys).product_keys
     
@@ -234,7 +235,7 @@ function func_Configure($folder, $reg_file, $iDP_config, $log_file, $event_file,
                 Write-ToLog -text  "Tableau Server License activation started"
 
                 #Activate Tableau server 14 day trial 
-                if($license_key.ToLower() -eq 'trial' -or $license_key -eq ''){
+                if($license_key.ToLower() -eq 'trial'){
                     Write-ToLog -text  "$tsm licenses activate -t"
                     Start-Process $tsm -ArgumentList " licenses activate -t" -Wait
                     Write-ToLog -text "Tableau Server 14 day Trial activated"
@@ -257,6 +258,24 @@ function func_Configure($folder, $reg_file, $iDP_config, $log_file, $event_file,
                 Write-ToLog -text "$tsm settings import -f $iDP_config"
                 Start-Process $tsm -ArgumentList " settings import -f $iDP_config" -Wait
                 Write-ToLog -text "Completed Tableau Server local Repository setup"
+
+                Write-ToLog -text "Setting Tableau Server Run As Service Account"
+                if($ts_admin_un -match "[\\]" -or $ts_admin_un -match "@") 
+                {
+                    Write-ToLog -text "$tsm configuration set -k service.runas.username -v $ts_admin_un"
+                    Start-Process $tsm -ArgumentList " configuration set -k service.runas.username -v $ts_admin_un"  -Wait
+                }
+                elseif($ts_admin_un -notmatch "[\\]" -or $ts_admin_un -notmatch "@")
+                {
+                    Write-ToLog -text "$tsm configuration set -k service.runas.username -v .\$ts_admin_un"
+                    Start-Process $tsm -ArgumentList " configuration set -k service.runas.username -v .\$ts_admin_un" -Wait
+                }
+                Write-ToLog -text "Completed configuring Tableau Server Run As Service Account"
+
+                Write-ToLog -text "Setting Tableau Server Run As Service Account password"
+                Write-ToLog -text "$tsm configuration set -k service.runas.password -v $ts_admin_pass "
+                Start-Process $tsm -ArgumentList " configuration set -k service.runas.password -v $ts_admin_pass " -Wait
+                Write-ToLog -text "Completed configuring Tableau Server Run As Service Account password"    
 
                 #Apply pending changes
                 Write-ToLog -text "Applying pending TSM changes"
@@ -281,6 +300,11 @@ function func_Configure($folder, $reg_file, $iDP_config, $log_file, $event_file,
                 Write-ToLog -text $PSItem.Exception.Message
             }
 }
+
+function func_fw_Rules{
+                        Write-ToLog -text "New-NetFirewallRule -DisplayName 'Open Inbound Port 80' -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow"
+                        New-NetFirewallRule -DisplayName "Open Inbound Port 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow
+}
 function func_AntiVirus(){
     #Disable antivirus scan for the folder that is being used during the installation
     Write-ToLog -text "Adding C:\Downloads to AV Exlusion"
@@ -299,12 +323,15 @@ function func_AntiVirus(){
         Write-ToLog -text "Added Tableau server data folder to AntiVirus Exlusions"
     }
 }  
+function func_cleanUp{
+    Write-ToLog -text "Remove-Item -Path $($folder+$DownloadFile) -Force"
+    Remove-Item -Path $($folder+$DownloadFile) -Force
+}
 function func_main(){
     func_createFolder
     func_regFile
     func_configFile
     func_Other
-    
 
     #Set paramaters for the Tableau Server version
     func_Version -version $global:ts_build
@@ -315,6 +342,8 @@ function func_main(){
     #Configure tableau server
     func_Configure -folder $folder -reg_file $reg_file -iDP_config $iDP_config -log_file $log_file  -event_file $event_file -license_key $global:product_keys
     #func_AntiVirus
+    func_fw_Rules
+    func_cleanUp
 }
 
 func_main
