@@ -57,7 +57,8 @@ function func_regFile{
         first_name = $reg_first_name
         last_name = $reg_last_name
         email = $reg_email
-        company = $reg_company
+        # company = "$reg_company
+        company = "$reg_company-azure-arm-windows"
         title = $reg_title
         department = $reg_department
         industry = $reg_industry
