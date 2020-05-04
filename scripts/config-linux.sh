@@ -34,8 +34,11 @@ done
 
 cd /tmp/
 
+#ADDED: create log file
+touch install.log
+
 # create secrets
-printf "tsm_admin_user=\"$USER\"\ntsm_admin_pass=\"$PASSWORD\"\ntableau_server_admin_user=\"$TS_USER\"\ntableau_server_admin_pass=\"$TS_PASS\"" >> secrets
+printf "tsm_admin_user=\"$USER\"\ntsm_admin_pass=\"$PASSWORD\"\ntableau_server_admin_user=\"$TS_USER\"\ntableau_server_admin_pass=\"$TS_PASS\"" >> secrets | tee -a install.log
 
 # create registration file
 echo "{
@@ -52,7 +55,7 @@ echo "{
  \"department\" : \"$DEPARMENT\",
  \"first_name\" : \"$FIRST_NAME\",
  \"email\" : \"$EMAIL\"
-}" >> registration.json
+}" >> registration.json | tee -a install.log
 
 # create config file
 echo '{
@@ -62,7 +65,7 @@ echo '{
       "type": "local"
     }
   }
-}' >> config.json
+}' >> config.json | tee -a install.log
 wait
 
 # assemble download URI
@@ -71,24 +74,24 @@ hyphen=`echo $VERSION | tr '.' '-'`
 # download tableau server .deb or.rpm file & retry on fail
 if [ "$OS" == "Ubuntu 16.04 LTS" ]
 then
-  wget --tries=3 --output-document=tableau-installer.deb "https://downloads.tableau.com/esdalt/${VERSION}/tableau-server-${hyphen}_amd64.deb"
+  wget --tries=3 --output-document=tableau-installer.deb "https://downloads.tableau.com/esdalt/${VERSION}/tableau-server-${hyphen}_amd64.deb" | tee -a install.log
 else
-  wget --tries=3 --output-document=tableau-installer.rpm "https://downloads.tableau.com/esdalt/${VERSION}/tableau-server-${hyphen}.x86_64.rpm"
+  wget --tries=3 --output-document=tableau-installer.rpm "https://downloads.tableau.com/esdalt/${VERSION}/tableau-server-${hyphen}.x86_64.rpm" | tee -a install.log
 fi
 
 if [ $? -ne 0 ]
 then
-  echo "wget of Tableau installer failed" >> installer_log.txt
+  echo "wget of Tableau installer failed" >> install.txt
   exit 1;
 fi
 
 # download automated-installer
-wget --remote-encoding=UTF-8 --output-document=automated-installer.sh $INSTALL_SCRIPT_URL
+wget --remote-encoding=UTF-8 --output-document=automated-installer.sh $INSTALL_SCRIPT_URL | tee -a install.log
                                                               
 wait
-chmod +x automated-installer.sh
+chmod +x automated-installer.sh | tee -a install.log
 
-echo "modified automated-installer" >> installer_log.txt
+echo "modified automated-installer" >> installer_log.txt | tee -a install.log
 
 # ensure everything is finished
 wait
@@ -100,16 +103,16 @@ if [ "$LICENSE_KEY" == "trial" ]
 then
   if [ "$OS" == "Ubuntu 16.04 LTS" ]
   then
-    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.deb --force | tee -a install.log
   else
-    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force    
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" --accepteula tableau-installer.rpm --force | tee -a install.log     
   fi
 else
   if [ "$OS" == "Ubuntu 16.04 LTS" ]
   then
-    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.deb --force | tee -a install.log
   else
-    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force
+    sudo ./automated-installer.sh -s secrets -f config.json -r registration.json -a "$USER" -k "$LICENSE_KEY" --accepteula tableau-installer.rpm --force | tee -a install.log
   fi
 fi
 
@@ -119,18 +122,18 @@ wait
 # on some RHEL versions, need to yum install firewalld?
 if [ "$OS" == "RHEL 7.6" ] || [ "$OS" == "CentOS 7.5" ]
 then
-  firewall-cmd --zone=public --add-port=80/tcp --permanent
-  firewall-cmd --reload
+  firewall-cmd --zone=public --add-port=80/tcp --permanent | tee -a install.log
+  firewall-cmd --reload | tee -a install.log
 fi
 
 # remove all install files
-rm registration.json
-rm secrets
+rm registration.json | tee -a install.log
+rm secrets | tee -a install.log
 if [ "$OS" == "RHEL 7.6" ] || [ "$OS" == "CentOS 7.5" ]
 then
-  rm tableau-installer.rpm
+  rm tableau-installer.rpm | tee -a install.log
 else
-  rm tableau-installer.deb
+  rm tableau-installer.deb | tee -a install.log
 fi
-rm automated-installer.sh
-rm config.json
+rm automated-installer.sh | tee -a install.log
+rm config.json | tee -a install.log
