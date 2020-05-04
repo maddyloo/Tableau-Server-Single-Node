@@ -94,7 +94,7 @@ echo "downloaded silent installer script" >> script_log.txt
                                                               
 wait
 chmod +x automated-installer.sh
-echo "modified automated-installer" >> installer_log.txt
+echo "modified automated-installer" >> script_log.txt
 
 # ensure everything is finished
 wait
