@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # confirmed: this script works when run manually as root user from root top directory using the following command
-# sh ./config-linux.sh -u <username> -p <password> -h admin -i admin -j 98107 -k usa -l seattle -m data -n tech -o yes -q pm -r 8888888 -s tableau -t wa -v dev -w jamie -x jdata@tableau.com [-y <license key>]
-# customized to reflect machine admin username and admin password
+# bash ./config-linux.sh -u <adminUsername> -p <adminPassword> -h <tableau_admin_username> -e <tableau_version> -i <tableau_admin_password> -j <registration_zip> -k <registration_country> -l <registration_city> -m <registration_last_name> -n <registration_industry> -o yes -q <registration_title'-r <registration_phone'-s <registration_company> -t <registration_state> -x <registration_email> -v <registration_department> -g, <installscripturi> -y <license_key> -f <OS> -w <registration_first_name>
 
 while getopts e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y: option
 do
