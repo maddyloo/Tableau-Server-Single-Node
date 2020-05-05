@@ -27,7 +27,6 @@
       "type": "string",
       "allowedValues": [
         "Ubuntu 16.04 LTS",
-        "Ubuntu 18.04 LTS",
         "CentOS 7.5", 
         "RHEL 7.6", 
         "Windows 2019-Datacenter",
@@ -185,7 +184,6 @@
     "virtualMachineSize": "[parameters('VMSize')]",
     "linux_os": [
       "Ubuntu 16.04 LTS",
-      "Ubuntu 18.04 LTS",
       "CentOS 7.5", 
       "RHEL 7.6"
     ],
@@ -195,12 +193,6 @@
         "publisher": "Canonical",
         "offer": "UbuntuServer",
         "sku": "16.04.0-LTS",
-        "version": "latest"
-      },
-      "Ubuntu 18.04 LTS": {
-        "publisher": "Canonical",
-        "offer": "UbuntuServer",
-        "sku": "18.04-LTS",
         "version": "latest"
       },
       "CentOS 7.5": {
