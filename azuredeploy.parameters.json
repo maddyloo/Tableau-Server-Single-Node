@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "tableau_version": {
-      "value": "2019.3.7"
+      "value": "2019.2.11"
     },
     "OS": {
       "value": "Ubuntu 16.04 LTS"
