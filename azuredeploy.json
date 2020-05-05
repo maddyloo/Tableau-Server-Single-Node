@@ -184,7 +184,8 @@
     "numberOfInstances": 1,
     "virtualMachineSize": "[parameters('VMSize')]",
     "linux_os": [
-      "Ubuntu 16.04 LTS", 
+      "Ubuntu 16.04 LTS",
+      "Ubuntu 18.04 LTS",
       "CentOS 7.5", 
       "RHEL 7.6"
     ],
@@ -194,6 +195,12 @@
         "publisher": "Canonical",
         "offer": "UbuntuServer",
         "sku": "16.04.0-LTS",
+        "version": "latest"
+      },
+      "Ubuntu 18.04 LTS": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "18.04-LTS",
         "version": "latest"
       },
       "CentOS 7.5": {
@@ -410,7 +417,6 @@
         "displayName": "[variables('NSGName')]"
       },
       "properties": {
-        // "securityRules": "[variables('LinuxsecurityRules')]"
         "securityRules": "[if(variables('os_is_linux'),variables('LinuxsecurityRules'),variables('WindowssecurityRules'))]"
       }
     },
@@ -517,7 +523,6 @@
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[parameters('location')]",
           "apiVersion": "2019-07-01",
-          // "apiVersion": "2018-06-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', concat('tableau', copyIndex(1)))]"
           ],
