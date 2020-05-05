@@ -6,7 +6,7 @@
       "value": "2020.1.3"
     },
     "OS": {
-      "value": "Windows 2016-Datacenter"
+      "value": "Windows 2012-R2-Datacenter"
     },
     "adminUsername": {
       "value": "mcorneli"

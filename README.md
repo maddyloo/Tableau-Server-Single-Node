@@ -15,7 +15,7 @@
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
 </a>
 
-This template deploys a **Standalone Tableau Server instance on a Virtual Machine** in its own Virtual Network.
+This template deploys a **Tableau Server on a Virtual Machine instance** in its own Virtual Network.
 
 `Tags: Tableau, Tableau Server, Business Intelligence, Analytics, Self-Service, Data Visualization`
 
@@ -96,6 +96,8 @@ If you would like to learn more about the steps required for a manual deplyoment
 + <a href=https://onlinehelp.tableau.com/current/guides/everybody-install-linux/en-us/everybody_admin_intro.htm>Tableau Server on Linux</a>
 + <a href=https://help.tableau.com/current/guides/everybody-install/en-us/everybody_admin_intro.htm>Tableau Server on Windows</a>
 + <a href=https://onlinehelp.tableau.com/current/server/en-us/ts_azure_welcome.htm>Tableau Server on Azure</a>
+
+This template offers a choice of which Tableau Server version to deploy.  In general Tableau recommends using hte most recent version (highest number) to access our most recent feature additions.  This template will be periodically updated to offer the most recent Tableau Server releases.  Older releases are available with the most recent maintenance release.
 
 ## Usage
 
