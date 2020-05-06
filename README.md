@@ -86,6 +86,7 @@ This template deploys the following Azure resources.  For information on the cos
 + <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/linux/overview>**Virtual Machine**</a>: A compute instance with Tableau Server installed - size and OS can be customized using the input parameters.  For more info on sizing please refer to <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes">Azure's documentation</a>.
     + Access to the VM is controlled by username/password authentication which you specify in the template parameters.  Please ensure you follow Azure's username and password <a href=https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq>requirements</a>
     + Please note that this template using a vanilla machine image.  If you would like to perform patching, upgrades, etc. you will have to do so manually once the deployment is complete.
+    + During configuration - rules are added to firewalls to allow public access to ports 80 and 8850.  The NSG limits external access to the CIDR address you specify upon deployment.
 + This template has a static GUID associated with it - allowing Azure & the template's creator to track usage and deployment statistics
 
 #### Tableau Server

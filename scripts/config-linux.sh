@@ -122,9 +122,10 @@ wait
 
 # if on RHEL, open firewall
 # on some RHEL versions, need to yum install firewalld?
-if [ "$OS" == "RHEL 7.6" ] || [ "$OS" == "CentOS 7.5" ]
+if [ "$OS" == "RHEL 7.7" ] || [ "$OS" == "CentOS 7.5" ]
 then
   firewall-cmd --zone=public --add-port=80/tcp --permanent
+  firewall-cmd --zone=public --add-port=8850/tcp --permanent
   firewall-cmd --reload
 fi
 echo "firewall rules updated" >> script_log.txt
@@ -132,7 +133,7 @@ echo "firewall rules updated" >> script_log.txt
 # remove all install files
 rm registration.json
 rm secrets
-if [ "$OS" == "RHEL 7.6" ] || [ "$OS" == "CentOS 7.5" ]
+if [ "$OS" == "RHEL 7.7" ] || [ "$OS" == "CentOS 7.5" ]
 then
   rm tableau-installer.rpm
 else

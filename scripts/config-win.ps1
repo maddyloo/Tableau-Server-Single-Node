@@ -306,6 +306,8 @@ function func_Configure($folder, $reg_file, $iDP_config, $log_file, $event_file,
 function func_fw_Rules{
                         Write-ToLog -text "New-NetFirewallRule -DisplayName 'Open Inbound Port 80' -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow"
                         New-NetFirewallRule -DisplayName "Open Inbound Port 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow
+                        Write-ToLog -text "New-NetFirewallRule -DisplayName 'Open Inbound Port 8850' -Direction Inbound -LocalPort 8850 -Protocol TCP -Action Allow"
+                        New-NetFirewallRule -DisplayName "Open Inbound Port 8850" -Direction Inbound -LocalPort 8850 -Protocol TCP -Action Allow
 }
 function func_AntiVirus(){
     #Disable antivirus scan for the folder that is being used during the installation
