@@ -65,7 +65,7 @@ Powershell:
 powershell -ExecutionPolicy Unrestricted -File <winscriptfile> -local_admin_user <adminUsername> -local_admin_pass <adminPassword> -ts_admin_un <tableau_admin_username> -ts_admin_pass <tableau_admin_password> -reg_zip <registration_zip> -reg_country <registration_country> -reg_city <registration_city> -reg_last_name <registration_last_name> -reg_industry <registration_industry> -eula <accept_eula> -reg_title <registration_title> -reg_phone <registration_phone> -reg_company <registration_company> -reg_state <registration_state> -reg_email <registration_email> -reg_department <registration_department> -install_script_url <winscripturi> -license_key <license_key> -reg_first_name <registration_first_name> -ts_build <tableau_version>
 ```
 
-This template is freely available on Github - you can download and customize your own version to modify its functionality.  This allows for options such as: adding additional parameter options, batch-executing the template, adding additional scripting elements to install drivers, etc.
+This template is freely available on Github - you can download and customize your own version to modify its functionality.  This allows for options such as: expanding parameter options, batch-executing the template, adding additional scripting elements to install drivers, etc.  You can then execute the parameter locally using a CLI of your choice.
 
 ## Resources
 

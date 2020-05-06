@@ -19,7 +19,7 @@
     "location": {
       "type": "string",
       "metadata": {
-        "description": "The location where these resources will be deployed."
+        "description": "The location where these resources will be deployed.  By default this will be the location of the resource group."
       },
       "defaultValue": "[resourceGroup().location]"
     },
@@ -53,6 +53,13 @@
         "description": "Please select the size of the VM you wish to deploy.  Tableau Server should be deployed on a machine with at least 16 vCPUs.  Standard_D4s_v3 is provided for testing only.  Read more about sizing options here: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes-general"
       },
       "defaultValue": "Standard_D16s_v3"
+    },
+    "WindowsVM_time_zone": {
+      "type": "string",
+      "metadata": {
+        "descriptions": "To specify a timezone other than GMT please use the timezone ID from this list: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-timezone"
+      },
+      "defaultValue": "GMT Standard Time"
     },
     "adminUsername": {
       "type": "string",
@@ -481,7 +488,10 @@
         "osProfile": {
           "computerName": "[concat('tableauvm', copyIndex(1))]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminPassword": "[parameters('adminPassword')]",
+          "windowsConfiguration": {
+            "timeZone": "[parameters('WindowsVM_time_zone')]"
+          }
         },
         "storageProfile": {
           "imageReference": "[variables('imageReference')[parameters('OS')]]",
