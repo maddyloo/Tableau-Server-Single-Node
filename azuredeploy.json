@@ -28,7 +28,7 @@
       "allowedValues": [
         "Ubuntu 16.04 LTS",
         "CentOS 7.5", 
-        "RHEL 7.6", 
+        "RHEL 7.7", 
         "Windows 2019-Datacenter",
         "Windows 2016-Datacenter",
         "Windows 2012-R2-Datacenter",
@@ -186,7 +186,7 @@
     "linux_os": [
       "Ubuntu 16.04 LTS",
       "CentOS 7.5", 
-      "RHEL 7.6"
+      "RHEL 7.7"
     ],
     "os_is_linux": "[contains(variables('linux_os'),parameters('OS'))]", //true if linux
     "imageReference": {
@@ -202,7 +202,7 @@
         "sku": "7.5",
         "version": "latest"
       },
-      "RHEL 7.6": {
+      "RHEL 7.7": {
         "publisher": "RedHat",
         "offer": "RHEL",
         "sku": "7-RAW",
