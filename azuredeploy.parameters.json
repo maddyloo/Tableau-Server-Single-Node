@@ -6,7 +6,7 @@
       "value": "2020.1.3"
     },
     "OS": {
-      "value": "CentOS 7.5"
+      "value": "RHEL 7.6"
     },
     "adminUsername": {
       "value": "mcorneli"
