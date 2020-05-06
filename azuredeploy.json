@@ -54,13 +54,6 @@
       },
       "defaultValue": "Standard_D16s_v3"
     },
-    "WindowsVM_time_zone": {
-      "type": "string",
-      "metadata": {
-        "descriptions": "To specify a timezone other than GMT please use the timezone ID from this list: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-timezone.  NOTE: please follow syntax exactly."
-      },
-      "defaultValue": "GMT Standard Time"
-    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -488,10 +481,7 @@
         "osProfile": {
           "computerName": "[concat('tableauvm', copyIndex(1))]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]",
-          "windowsConfiguration": {
-            "timeZone": "[parameters('WindowsVM_time_zone')]"
-          }
+          "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
           "imageReference": "[variables('imageReference')[parameters('OS')]]",
