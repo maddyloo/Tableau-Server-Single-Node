@@ -57,7 +57,7 @@
     "WindowsVM_time_zone": {
       "type": "string",
       "metadata": {
-        "descriptions": "To specify a timezone other than GMT please use the timezone ID from this list: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-timezone"
+        "descriptions": "To specify a timezone other than GMT please use the timezone ID from this list: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-timezone.  NOTE: please follow syntax exactly."
       },
       "defaultValue": "GMT Standard Time"
     },
