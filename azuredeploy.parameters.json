@@ -63,7 +63,7 @@
       "value": "Yes"
     },
     "VMSize": {
-      "value": "Standard_D16s_v3"
+      "value": "Standard_D16as_v4"
     },
     "license_key": {
       "value": "TRIal"
