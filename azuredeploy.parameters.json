@@ -6,7 +6,7 @@
       "value": "2019.4.6"
     },
     "OS": {
-      "value": "CentOS 7.5"
+      "value": "Windows 2012-R2-Datacenter"
     },
     "adminUsername": {
       "value": "mcorneli"
