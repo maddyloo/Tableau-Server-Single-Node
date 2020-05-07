@@ -48,11 +48,11 @@
     },
     "VMSize": {
       "type": "string",
-      "allowedValues": ["Standard_D16as_v4", "Standard_D32as_v4", "Standard_D48as_v4", "Standard_E16as_v4", "Standard_E32as_v4", "Standard_E48as_v4", "Standard_D4as_v4"],
+      "allowedValues": ["Standard_D16s_v3","Standard_D32s_v3","Standard_D48s_v3","Standard_D4s_v3"],
       "metadata": {
         "description": "Please select the size of the VM you wish to deploy.  Tableau Server should be deployed on a machine with at least 16 vCPUs.  Standard_D4s_v3 is provided for testing only.  Read more about sizing options here: https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-general"
       },
-      "defaultValue": "Standard_D16as_v4"
+      "defaultValue": "Standard_D16s_v3"
     },
     "adminUsername": {
       "type": "string",
